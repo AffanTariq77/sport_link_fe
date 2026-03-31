@@ -1,4 +1,22 @@
 import 'package:flutter/material.dart';
+import 'theme.dart';
+import 'screens/splash_screen.dart';
+import 'screens/onboarding_screen.dart';
+import 'screens/signup_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/find_venue_screen.dart';
+import 'screens/find_match_screen.dart';
+import 'screens/create_match_screen.dart';
+import 'screens/messages_list_screen.dart';
+import 'screens/chat_screen.dart';
+import 'screens/tournament_list_screen.dart';
+import 'screens/tournament_detail_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/booking_summary_screen.dart';
+import 'screens/payment_success_screen.dart';
+import 'screens/find_player_screen.dart';
+import 'screens/player_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,26 +29,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'SportLink',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light(),
+      home: const SplashScreen(),
+      routes: {
+        '/signup': (context) => const SignupScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/find_venue': (context) => const FindVenueScreen(),
+        '/find_match': (context) => const FindMatchScreen(),
+        '/create_match': (context) => const CreateMatchScreen(),
+        '/messages': (context) => const MessagesListScreen(),
+        '/chat': (context) => const ChatScreen(),
+        '/tournaments': (context) => const TournamentListScreen(),
+        '/tournament_detail': (context) => const TournamentDetailScreen(),
+        '/notifications': (context) => const NotificationsScreen(),
+        '/booking_summary': (context) => const BookingSummaryScreen(),
+        '/payment_success': (context) => const PaymentSuccessScreen(),
+        '/find_player': (context) => const FindPlayerScreen(),
+        '/player_detail': (context) => const PlayerDetailScreen(),
+        '/home': (context) => const HomeScreen(),
+      },
     );
   }
 }
@@ -102,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('You have pushed the button this many times:'),
             Text(
