@@ -16,10 +16,13 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [verifyNow, setVerifyNow] = useState(false); // user chose to verify before it is required
+  const [isVendor, setIsVendor] = useState(false);
 
   async function load(u: Schemas['User'] | null) {
     setUser(u);
-    setVerification(u ? ((await api.GET('/me/verification', { headers: await authHeaders() })).data ?? null) : null);
+    const headers = await authHeaders();
+    setVerification(u ? ((await api.GET('/me/verification', { headers })).data ?? null) : null);
+    setIsVendor(!!u && !!(await api.GET('/vendor/access', { headers })).data?.vendors.length);
   }
 
   useEffect(() => {
@@ -49,6 +52,7 @@ export default function Home() {
         {canSubmit && <TextButton title="Verify your identity" onPress={() => setVerifyNow(true)} />}
         <Button title="Book a venue" onPress={() => router.push('/venues')} />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
+        {isVendor && <TextButton title="Vendor: payments to check" onPress={() => router.push('/vendor/payments')} />}
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
     );

@@ -19,8 +19,8 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 
 - The API client is generated from the backend's OpenAPI spec into `packages/api-client` (`openapi-fetch` + `openapi-typescript`). After backend changes, run `API_URL=<api> pnpm --filter @sportslink/api-client generate`. Never hand-write API types or edit `schema.d.ts`.
 - Onboarding is built (sign in, then profile, then ID upload): web in `apps/web/src/app/sign-in`, `onboarding/`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile home route `apps/mobile/src/app/index.tsx`, `src/screens/` and `src/session.ts` (expo-secure-store, expo-image-picker).
-- Venues and booking are built: web `apps/web/src/app/venues` and `bookings`, mobile Expo Router routes `src/app/venues` and `src/app/bookings.tsx`. Players browse venues, see the refund policy, pick a court, day and slot, and hold it. Paying the advance is not built yet.
-- Shared display helpers (`formatMoney` with ISO minor units, venue-time `formatTime` and `formatDay`, `describePolicy`) live in `packages/api-client/src/format.ts`. Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
+- Venues and booking are built: web `apps/web/src/app/venues` and `bookings`, mobile Expo Router routes `src/app/venues` and `src/app/bookings.tsx`. Players browse venues, see the refund policy, pick a court, day and slot, hold it, and pay the advance (web `bookings/[id]/pay`, mobile `src/app/pay/[id].tsx`). Vendors confirm or reject payments (web `vendor/payments`, mobile `src/app/vendor/payments.tsx`), shown when `GET /vendor/access` returns a vendor.
+- Shared display helpers (`formatMoney` with ISO minor units, venue-time `formatTime` and `formatDay`, `describePolicy`, `paymentMethodName`, `bookingStatusText`) live in `packages/api-client/src/format.ts`. Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
 - Never call the database or third-party services directly from the frontend.
 - Auth tokens: secure storage on mobile (expo-secure-store), httpOnly cookies on web. Never localStorage.
 

@@ -1,19 +1,9 @@
-import { describePolicy, formatDay, formatMoney, formatTime, type Schemas } from '@sportslink/api-client';
-import { router } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { bookingStatusText, describePolicy, formatDay, formatMoney, formatTime, type Schemas } from '@sportslink/api-client';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
 import { failed, Message, run, TextButton } from '../ui';
-
-const statusText: Record<string, string> = {
-  held: 'Held for you',
-  pending_payment: 'Waiting for payment',
-  confirmed: 'Confirmed',
-  completed: 'Played',
-  cancelled: 'Cancelled',
-  no_show: 'No-show',
-  expired: 'Expired',
-};
 
 export default function Bookings() {
   const [bookings, setBookings] = useState<Schemas['MyBooking'][] | null>(null);
@@ -29,7 +19,12 @@ export default function Bookings() {
       }),
     [],
   );
-  useEffect(() => void load(), [load]);
+  // Reload when coming back, for example after paying.
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [load]),
+  );
 
   return (
     <FlatList
@@ -59,14 +54,19 @@ export default function Bookings() {
               {formatDay(b.startAt, tz)}, {formatTime(b.startAt, tz)} to {formatTime(b.endAt, tz)}
             </Text>
             <Text>
-              {statusText[b.status] ?? b.status} · {formatMoney(b.total, b.currency)}
+              {bookingStatusText[b.status] ?? b.status} · {formatMoney(b.total, b.currency)}
               {b.advanceDue > 0 ? ` · advance ${formatMoney(b.advanceDue, b.currency)}` : ''}
             </Text>
             {b.status === 'held' && b.holdExpiresAt && (
               <Text style={{ marginTop: 6 }}>
-                We are holding this slot until {formatTime(b.holdExpiresAt, tz)}. Paying the advance in the app is not
-                available yet, so this hold will expire.
+                We are holding this slot until {formatTime(b.holdExpiresAt, tz)}. Pay the advance before then to keep it.
               </Text>
+            )}
+            {(b.status === 'held' || b.status === 'pending_payment') && (
+              <TextButton
+                title={b.status === 'held' ? 'Pay advance' : 'Payment details'}
+                onPress={() => router.push(`/pay/${b.id}`)}
+              />
             )}
             {b.status === 'held' &&
               describePolicy(b.policy, b.currency).map((line) => <Text key={line}>{line}</Text>)}

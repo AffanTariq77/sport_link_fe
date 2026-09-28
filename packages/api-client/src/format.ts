@@ -54,3 +54,20 @@ export function describePolicy(
   const noShow = p.noShowRefund ? 'No-shows are refunded.' : 'No-shows are not refunded.';
   return [advance, cancel, noShow];
 }
+
+export const paymentMethodName: Record<string, string> = {
+  jazzcash: 'JazzCash',
+  easypaisa: 'Easypaisa',
+  bank_transfer: 'Bank transfer',
+  cash: 'Cash at the venue',
+};
+
+export const bookingStatusText: Record<string, string> = {
+  held: 'Held for you',
+  pending_payment: 'Waiting for the venue to confirm your payment',
+  confirmed: 'Confirmed',
+  completed: 'Played',
+  cancelled: 'Cancelled',
+  no_show: 'No-show',
+  expired: 'Expired',
+};

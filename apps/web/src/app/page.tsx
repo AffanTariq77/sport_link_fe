@@ -9,6 +9,7 @@ export default async function Home() {
   const step = user && (await onboardingStep(user));
   if (step) redirect(step);
   const verification = user && (await api.GET('/me/verification', { headers: await authHeaders() })).data;
+  const vendor = user && (await api.GET('/vendor/access', { headers: await authHeaders() })).data?.vendors.length;
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
       <h1 className="text-3xl font-semibold">SportsLink</h1>
@@ -30,6 +31,11 @@ export default async function Home() {
               My bookings
             </Link>
           </div>
+          {!!vendor && (
+            <Link href="/vendor/payments" className="text-sm underline">
+              Vendor: payments to check
+            </Link>
+          )}
           <button className="text-sm underline">Sign out</button>
         </form>
       ) : (

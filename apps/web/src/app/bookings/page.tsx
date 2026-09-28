@@ -1,4 +1,4 @@
-import { describePolicy, formatDay, formatMoney, formatTime } from '@sportslink/api-client';
+import { bookingStatusText, describePolicy, formatDay, formatMoney, formatTime } from '@sportslink/api-client';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -7,15 +7,6 @@ import { authHeaders, currentUser } from '@/lib/session';
 
 export const metadata: Metadata = { title: 'My bookings · SportsLink' };
 
-const statusText: Record<string, string> = {
-  held: 'Held for you',
-  pending_payment: 'Waiting for payment',
-  confirmed: 'Confirmed',
-  completed: 'Played',
-  cancelled: 'Cancelled',
-  no_show: 'No-show',
-  expired: 'Expired',
-};
 
 export default async function BookingsPage(props: PageProps<'/bookings'>) {
   if (!(await currentUser())) redirect('/sign-in');
@@ -45,14 +36,19 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
               {formatTime(b.endAt, b.venue.timezone)}
             </p>
             <p className="text-sm">
-              {statusText[b.status] ?? b.status} · {formatMoney(b.total, b.currency)}
+              {bookingStatusText[b.status] ?? b.status} · {formatMoney(b.total, b.currency)}
               {b.advanceDue > 0 && ` · advance ${formatMoney(b.advanceDue, b.currency)}`}
             </p>
             {b.status === 'held' && b.holdExpiresAt && (
               <p className="mt-2 text-sm">
-                We are holding this slot until {formatTime(b.holdExpiresAt, b.venue.timezone)}. Paying the advance in
-                the app is not available yet, so this hold will expire.
+                We are holding this slot until {formatTime(b.holdExpiresAt, b.venue.timezone)}. Pay the advance before
+                then to keep it.
               </p>
+            )}
+            {(b.status === 'held' || b.status === 'pending_payment') && (
+              <Link href={`/bookings/${b.id}/pay`} className="mt-2 inline-block text-sm font-medium underline">
+                {b.status === 'held' ? 'Pay advance' : 'Payment details'}
+              </Link>
             )}
             {b.status === 'held' && (
               <ul className="mt-2 text-sm">

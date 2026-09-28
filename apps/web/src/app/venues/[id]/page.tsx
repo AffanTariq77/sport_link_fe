@@ -1,4 +1,4 @@
-import { describePolicy, formatDay, formatMoney, formatTime, nextDates } from '@sportslink/api-client';
+import { describePolicy, formatDay, formatMoney, formatTime, nextDates, paymentMethodName } from '@sportslink/api-client';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
@@ -7,12 +7,6 @@ import { holdSlot } from '../../bookings/actions';
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
 const on = 'border-neutral-900 bg-neutral-900 text-white dark:border-white dark:bg-white dark:text-neutral-900';
-const methodNames: Record<string, string> = {
-  jazzcash: 'JazzCash',
-  easypaisa: 'Easypaisa',
-  bank_transfer: 'Bank transfer',
-  cash: 'Cash at the venue',
-};
 
 export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
   const { id } = await props.params;
@@ -51,7 +45,7 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
         ))}
         <p>
           You pay the venue directly
-          {venue.paymentMethods.length ? ` by ${venue.paymentMethods.map((m) => methodNames[m] ?? m).join(', ')}` : ''}.
+          {venue.paymentMethods.length ? ` by ${venue.paymentMethods.map((m) => paymentMethodName[m] ?? m).join(', ')}` : ''}.
         </p>
       </section>
 

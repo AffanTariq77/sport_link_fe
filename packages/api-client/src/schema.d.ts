@@ -228,6 +228,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/bookings/{id}/payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PaymentsController_payInfo"];
+        put?: never;
+        post: operations["PaymentsController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PaymentsController_access"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PaymentsController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/payments/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_confirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/payments/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -428,6 +508,95 @@ export interface components {
                 city: string;
                 timezone: string;
             };
+        };
+        PayInfo: {
+            /** @enum {string} */
+            status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+            currency: string;
+            timezone: string;
+            total: number;
+            advanceDue: number;
+            /** Format: date-time */
+            holdExpiresAt: string | null;
+            /** Format: date-time */
+            paymentDeadlineAt: string | null;
+            payAtVenueAllowed: boolean;
+            accounts: {
+                /** @enum {string} */
+                method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash";
+                accountTitle: string;
+                accountNumber: string | null;
+                bankName: string | null;
+            }[];
+            payments: {
+                /** @enum {string} */
+                status: "pending" | "submitted" | "confirmed" | "rejected" | "refunded" | "void";
+                /** @enum {string|null} */
+                method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash" | null;
+                txnReference: string | null;
+            }[];
+        };
+        PaymentSubmission: {
+            /** @enum {string} */
+            method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash";
+            txnReference?: string;
+        };
+        PaymentResult: {
+            /** @enum {string} */
+            status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+            /** Format: date-time */
+            paymentDeadlineAt: string | null;
+        };
+        VendorAccess: {
+            vendors: {
+                /** Format: uuid */
+                id: string;
+                businessName: string;
+                branches: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                }[];
+            }[];
+        };
+        PaymentToCheck: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string|null} */
+            method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash" | null;
+            txnReference: string | null;
+            advanceAmount: number;
+            /** Format: date-time */
+            submittedAt: string;
+            playerName: string | null;
+            court: string;
+            branch: {
+                name: string;
+                timezone: string;
+            };
+            booking: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                currency: string;
+                total: number;
+                /** Format: date-time */
+                holdExpiresAt: string | null;
+                /** Format: date-time */
+                paymentDeadlineAt: string | null;
+            };
+        };
+        PaymentHandled: {
+            /** Format: uuid */
+            id: string;
+        };
+        RejectPayment: {
+            reason: string;
         };
     };
     responses: never;
@@ -873,6 +1042,190 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MyBooking"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_payInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PayInfo"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentSubmission"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_access: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VendorAccess"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_queue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentToCheck"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_confirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentHandled"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectPayment"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentHandled"];
                 };
             };
             /** @description Error */

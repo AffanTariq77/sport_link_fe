@@ -1,16 +1,18 @@
-import { describePolicy, formatDay, formatMoney, formatTime, nextDates, type Schemas } from '@sportslink/api-client';
+import {
+  describePolicy,
+  formatDay,
+  formatMoney,
+  formatTime,
+  nextDates,
+  paymentMethodName,
+  type Schemas,
+} from '@sportslink/api-client';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
 import { failed, Message, run, styles as ui } from '../../ui';
 
-const methodNames: Record<string, string> = {
-  jazzcash: 'JazzCash',
-  easypaisa: 'Easypaisa',
-  bank_transfer: 'Bank transfer',
-  cash: 'Cash at the venue',
-};
 type Slot = Schemas['CourtSlots']['slots'][number];
 
 export default function VenueScreen() {
@@ -103,7 +105,7 @@ export default function VenueScreen() {
         ))}
         <Text>
           You pay the venue directly
-          {venue.paymentMethods.length ? ` by ${venue.paymentMethods.map((m) => methodNames[m] ?? m).join(', ')}` : ''}.
+          {venue.paymentMethods.length ? ` by ${venue.paymentMethods.map((m) => paymentMethodName[m] ?? m).join(', ')}` : ''}.
         </Text>
       </View>
 
