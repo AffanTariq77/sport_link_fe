@@ -8,6 +8,7 @@ const NAV = [
   ['/verifications', 'Identity checks', 'verification.review'],
   ['/venues', 'Venues', 'venues.approve'],
   ['/payment-accounts', 'Payment accounts', 'payment_accounts.approve'],
+  ['/invoices', 'Invoices', 'billing.view'],
   ['/users', 'Users and bans', 'users.ban'],
   ['/reports', 'Reports and disputes', 'reports.review'],
   ['/audit', 'Audit log', 'audit.view'],

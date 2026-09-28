@@ -87,7 +87,7 @@ export default async function VendorPage() {
         <h1 className="text-2xl font-semibold">{vendor.businessName}</h1>
         <p className="text-sm">{vendorStatusText[vendor.status] ?? vendor.status}</p>
       </div>
-      <div className="flex gap-4 text-sm">
+      <div className="flex flex-wrap gap-4 text-sm">
         <Link href="/vendor/calendar" className="underline">
           Calendar
         </Link>
@@ -96,6 +96,9 @@ export default async function VendorPage() {
         </Link>
         <Link href="/chats" className="underline">
           Messages from players
+        </Link>
+        <Link href="/vendor/billing" className="underline">
+          Billing
         </Link>
       </div>
 

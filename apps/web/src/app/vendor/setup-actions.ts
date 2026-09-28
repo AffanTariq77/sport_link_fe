@@ -228,3 +228,18 @@ export async function removeStaff(vendorId: string, userId: string): Promise<For
   if (error) return fail(error);
   redirect('/vendor?saved=staff');
 }
+
+export async function uploadInvoiceProof(vendorId: string, invoiceId: string, _: FormState, form: FormData): Promise<FormState> {
+  const proof = form.get('proof');
+  if (!(proof instanceof File) || !proof.size) return { message: 'Attach a photo or screenshot of your payment.' };
+  const upload = new FormData();
+  upload.set('proof', proof);
+  const { error } = await api.POST('/vendor/billing/{vendorId}/invoices/{id}/proof', {
+    params: { path: { vendorId, id: invoiceId } },
+    headers: await authHeaders(),
+    body: {} as never, // multipart: replaced by the FormData above
+    bodySerializer: () => upload,
+  });
+  if (error) return fail(error);
+  redirect('/vendor/billing?saved=proof');
+}

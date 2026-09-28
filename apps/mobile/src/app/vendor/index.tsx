@@ -1,4 +1,4 @@
-import { paymentMethodName, type Schemas } from '@sportslink/api-client';
+import { formatMoney, paymentMethodName, type Schemas } from '@sportslink/api-client';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -19,6 +19,7 @@ const accountStatusText: Record<string, string> = { pending: 'Waiting for approv
 // (spec 13: the vendor calendar and tools are easier there).
 export default function Vendor() {
   const [setup, setSetup] = useState<Schemas['VendorSetup'] | null>(null);
+  const [billing, setBilling] = useState<Schemas['VendorBillingSummary'][]>([]);
   const [verification, setVerification] = useState<Schemas['VerificationStatus'] | null>(null);
   const [businessName, setBusinessName] = useState('');
   const [message, setMessage] = useState('');
@@ -28,7 +29,12 @@ export default function Vendor() {
     () =>
       run(setBusy, setMessage, async () => {
         const headers = await authHeaders();
-        const [s, v] = await Promise.all([api.GET('/vendor/setup', { headers }), api.GET('/me/verification', { headers })]);
+        const [s, v, b] = await Promise.all([
+          api.GET('/vendor/setup', { headers }),
+          api.GET('/me/verification', { headers }),
+          api.GET('/vendor/billing', { headers }),
+        ]);
+        setBilling(b.data ?? []);
         if (!s.data) return setMessage(s.error?.message ?? failed);
         setSetup(s.data);
         setVerification(v.data ?? null);
@@ -91,6 +97,19 @@ export default function Vendor() {
                     {c.done ? '✓' : '○'} {c.label}
                   </Text>
                 ))}
+            </View>
+          ))}
+          {billing.map((bl) => (
+            <View key={bl.vendorId} style={styles.card}>
+              <Text style={styles.name}>Billing: {formatMoney(bl.running.amount, bl.running.currency)} so far this month</Text>
+              {bl.invoices
+                .filter((i) => i.status === 'issued' || i.status === 'overdue')
+                .map((i) => (
+                  <Text key={i.id}>
+                    Invoice {i.periodStart.slice(0, 7)}: {formatMoney(i.amount, i.currency)} {i.status === 'overdue' ? 'overdue' : 'to pay'}
+                  </Text>
+                ))}
+              <Text style={{ fontSize: 12 }}>Invoices and proof of payment are on the website.</Text>
             </View>
           ))}
           <Text style={ui.label}>Where players pay you</Text>

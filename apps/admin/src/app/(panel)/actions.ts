@@ -101,3 +101,19 @@ export async function resolveReport(id: string, _: FormState, form: FormData): P
   if (error) return fail(error);
   redirect('/reports?done=1');
 }
+
+export async function settleInvoice(id: string, _: FormState, form: FormData): Promise<FormState> {
+  const headers = await adminHeaders();
+  const { error } =
+    form.get('decision') === 'paid'
+      ? await api.POST('/admin/invoices/{id}/paid', { params: { path: { id } }, headers })
+      : await api.POST('/admin/invoices/{id}/write-off', { params: { path: { id } }, headers, body: { reason: text(form, 'reason') } });
+  if (error) return fail(error);
+  redirect('/invoices?done=1');
+}
+
+export async function runBilling(): Promise<FormState> {
+  const { data, error } = await api.POST('/admin/invoices/run', { headers: await adminHeaders() });
+  if (error) return fail(error);
+  return { message: data ? `Done: ${data.completed} bookings completed, ${data.issued} invoices issued, ${data.ladder} overdue steps.` : 'Another server is running billing right now.' };
+}
