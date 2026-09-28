@@ -168,3 +168,63 @@ export async function addAccount(_: FormState, form: FormData): Promise<FormStat
   if (error) return fail(error);
   redirect('/vendor?saved=account');
 }
+
+export async function manualBooking(back: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/vendor/bookings/manual', {
+    headers: await authHeaders(),
+    body: {
+      courtId: text(form, 'courtId'),
+      startAt: text(form, 'startAt'),
+      endAt: text(form, 'endAt'),
+      customerName: text(form, 'customerName'),
+      customerPhone: text(form, 'customerPhone') || undefined,
+    },
+  });
+  if (error) return fail(error);
+  redirect(back);
+}
+
+export async function blockSlot(back: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/vendor/blocks', {
+    headers: await authHeaders(),
+    body: { courtId: text(form, 'courtId'), startAt: text(form, 'startAt'), endAt: text(form, 'endAt'), reason: text(form, 'reason') },
+  });
+  if (error) return fail(error);
+  redirect(back);
+}
+
+export async function markNoShow(back: string, id: string): Promise<FormState> {
+  const { error } = await api.POST('/vendor/bookings/{id}/no-show', { params: { path: { id } }, headers: await authHeaders() });
+  if (error) return fail(error);
+  redirect(back);
+}
+
+export async function addStaff(vendorId: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/vendor/{vendorId}/staff', {
+    params: { path: { vendorId } },
+    headers: await authHeaders(),
+    body: {
+      phone: text(form, 'phone'),
+      permissions: form.getAll('permissions').map(String) as (
+        | 'view_bookings'
+        | 'create_bookings'
+        | 'confirm_payments'
+        | 'edit_prices'
+        | 'view_revenue'
+        | 'manage_staff'
+      )[],
+      branchIds: form.getAll('branchIds').map(String),
+    },
+  });
+  if (error) return fail(error);
+  redirect('/vendor?saved=staff');
+}
+
+export async function removeStaff(vendorId: string, userId: string): Promise<FormState> {
+  const { error } = await api.DELETE('/vendor/{vendorId}/staff/{userId}', {
+    params: { path: { vendorId, userId } },
+    headers: await authHeaders(),
+  });
+  if (error) return fail(error);
+  redirect('/vendor?saved=staff');
+}

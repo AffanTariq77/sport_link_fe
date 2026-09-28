@@ -21,6 +21,7 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 - Onboarding is built (sign in, then profile, then ID upload): web in `apps/web/src/app/sign-in`, `onboarding/`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile home route `apps/mobile/src/app/index.tsx`, `src/screens/` and `src/session.ts` (expo-secure-store, expo-image-picker).
 - Venues and booking are built: web `apps/web/src/app/venues` and `bookings`, mobile Expo Router routes `src/app/venues` and `src/app/bookings.tsx`. Players browse venues, see the refund policy, pick a court, day and slot, hold it, and pay the advance (web `bookings/[id]/pay`, mobile `src/app/pay/[id].tsx`). Vendors confirm or reject payments (web `vendor/payments`, mobile `src/app/vendor/payments.tsx`), shown when `GET /vendor/access` returns a vendor.
 - Vendor onboarding: web `vendor/` (apply, venues, payment accounts) and `vendor/branches/[id]` (details, policy, courts, hours, prices, checklist, send for review) using `components/action-form.tsx`; mobile `src/app/vendor/index.tsx` (apply and setup status; editing is on the web for now). `toMinor`/`fromMinor` convert typed rupees for the API.
+- Vendor calendar and staff: web `vendor/calendar` (day view per court, walk-ins, blocks, no-shows) and a staff section on `vendor/`; mobile `src/app/vendor/calendar.tsx` (day view, walk-ins and blocks).
 - Admin panel (`apps/admin`): sign-in with two-factor code, admin token in an httpOnly `sla_admin` cookie, route group `(panel)` with navigation filtered by permissions: overview, identity checks (images streamed through `documents/[id]/[side]`, never public or cached), venues (visits, billing, status), payment accounts, users and bans, reports, audit log.
 - `packages/ui`: shared web components (`ActionForm`, `keepValues`); both Next apps `@source` it for Tailwind. Forms submit through `keepValues` so React 19 does not clear fields when an action returns an error.
 - Shared display helpers (`formatMoney` with ISO minor units, venue-time `formatTime` and `formatDay`, `describePolicy`, `paymentMethodName`, `bookingStatusText`) live in `packages/api-client/src/format.ts`. Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
@@ -58,7 +59,7 @@ Do not invent a brand. When it is ready, put the tokens in one place per app and
 1. Brand and design system once the brand is chosen
 2. Guardian consent flow for minors (sign-in, profile and ID upload are done)
 4. Venue search, venue page, booking with split payment and payment confirmation status
-5. Vendor mode: onboarding, courts, pricing, calendar with manual bookings and blocks, payment confirmation queue
+5. Vendor mode: venue photos (onboarding, courts, pricing, calendar, manual bookings, blocks, payment queue and staff are done)
 6. Create and join match, host approval
 7. Chat
 8. Admin: invoices (venue and payment account approvals, site visits, bans, commission, reports and audit log are done)

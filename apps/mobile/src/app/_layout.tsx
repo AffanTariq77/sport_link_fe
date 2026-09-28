@@ -12,6 +12,7 @@ export default function Layout() {
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
         <Stack.Screen name="vendor/index" options={{ title: 'Vendor' }} />
         <Stack.Screen name="vendor/payments" options={{ title: 'Payments to check' }} />
+        <Stack.Screen name="vendor/calendar" options={{ title: 'Calendar' }} />
       </Stack>
       <StatusBar style="auto" />
     </>

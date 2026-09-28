@@ -6,7 +6,7 @@ import { ActionForm, input, labelClass } from '@sportslink/ui';
 import { BranchFields } from '@/components/branch-fields';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
-import { addAccount, applyAsVendor, createBranch } from './setup-actions';
+import { addAccount, addStaff, applyAsVendor, createBranch, removeStaff } from './setup-actions';
 
 export const metadata: Metadata = { title: 'Vendor · SportsLink' };
 
@@ -29,6 +29,14 @@ const branchStatusText: Record<string, string> = {
 };
 const accountStatusText: Record<string, string> = { pending: 'Waiting for approval', approved: 'Approved', rejected: 'Rejected' };
 const card = 'rounded-lg border p-4';
+const STAFF_PERMISSION_TEXT: Record<string, string> = {
+  view_bookings: 'See the calendar',
+  create_bookings: 'Add walk-in bookings and blocks',
+  confirm_payments: 'Confirm payments',
+  edit_prices: 'Edit prices',
+  view_revenue: 'See revenue',
+  manage_staff: 'Manage staff',
+};
 
 export default async function VendorPage() {
   if (!(await currentUser())) redirect('/sign-in');
@@ -38,6 +46,9 @@ export default async function VendorPage() {
     api.GET('/me/verification', { headers }),
   ]);
   const vendor = setup?.vendor;
+  const { data: staffList } = vendor
+    ? await api.GET('/vendor/{vendorId}/staff', { params: { path: { vendorId: vendor.id } }, headers })
+    : { data: undefined };
 
   if (!vendor) {
     return (
@@ -76,9 +87,14 @@ export default async function VendorPage() {
         <h1 className="text-2xl font-semibold">{vendor.businessName}</h1>
         <p className="text-sm">{vendorStatusText[vendor.status] ?? vendor.status}</p>
       </div>
-      <Link href="/vendor/payments" className="text-sm underline">
-        Payments to check
-      </Link>
+      <div className="flex gap-4 text-sm">
+        <Link href="/vendor/calendar" className="underline">
+          Calendar
+        </Link>
+        <Link href="/vendor/payments" className="underline">
+          Payments to check
+        </Link>
+      </div>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Venues</h2>
@@ -158,6 +174,54 @@ export default async function VendorPage() {
                     ))}
                   </select>
                 </label>
+              )}
+            </ActionForm>
+          </div>
+        </details>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">Staff</h2>
+        <p className="text-sm">Staff sign in with their own SportsLink account and only see what you allow.</p>
+        {staffList?.filter((m) => m.active).map((m) => (
+          <div key={m.userId} className={`${card} flex items-start justify-between gap-3 text-sm`}>
+            <div>
+              <p className="font-medium">{m.name ?? 'No name'}</p>
+              <p>{m.permissions.map((p) => STAFF_PERMISSION_TEXT[p] ?? p).join(', ')}</p>
+              <p>
+                {m.branchIds.length
+                  ? setup.branches.filter((b) => m.branchIds.includes(b.id)).map((b) => b.name).join(', ')
+                  : 'All venues'}
+              </p>
+            </div>
+            <ActionForm action={removeStaff.bind(null, vendor.id, m.userId)} button="Remove" className="flex" />
+          </div>
+        ))}
+        <details className={card}>
+          <summary className="cursor-pointer font-medium">Add staff</summary>
+          <div className="mt-3">
+            <ActionForm action={addStaff.bind(null, vendor.id)} button="Add staff member">
+              <label className={labelClass}>
+                Their SportsLink mobile number
+                <input name="phone" type="tel" required placeholder="0300 1234567" className={input} />
+              </label>
+              <fieldset className="flex flex-col gap-1 text-sm">
+                <legend className="font-medium">They can</legend>
+                {Object.entries(STAFF_PERMISSION_TEXT).map(([value, text]) => (
+                  <label key={value} className="flex items-center gap-2">
+                    <input type="checkbox" name="permissions" value={value} defaultChecked={value === 'view_bookings'} /> {text}
+                  </label>
+                ))}
+              </fieldset>
+              {setup.branches.length > 1 && (
+                <fieldset className="flex flex-col gap-1 text-sm">
+                  <legend className="font-medium">At (leave all unticked for every venue)</legend>
+                  {setup.branches.map((b) => (
+                    <label key={b.id} className="flex items-center gap-2">
+                      <input type="checkbox" name="branchIds" value={b.id} /> {b.name}
+                    </label>
+                  ))}
+                </fieldset>
               )}
             </ActionForm>
           </div>

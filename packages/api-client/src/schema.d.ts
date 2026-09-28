@@ -484,6 +484,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/vendor/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CalendarController_day"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/bookings/manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CalendarController_manual"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CalendarController_block"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/bookings/{id}/no-show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CalendarController_noShow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/{vendorId}/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CalendarController_listStaff"];
+        put?: never;
+        post: operations["CalendarController_addStaff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/{vendorId}/staff/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["CalendarController_removeStaff"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/auth/login": {
         parameters: {
             query?: never;
@@ -1068,6 +1164,7 @@ export interface components {
                     /** Format: uuid */
                     id: string;
                     name: string;
+                    timezone: string;
                 }[];
             }[];
         };
@@ -1133,6 +1230,12 @@ export interface components {
                 timezone: string;
                 /** @enum {string} */
                 status: "draft" | "pending_visit" | "live" | "hidden" | "suspended" | "banned";
+                visit: {
+                    /** Format: date-time */
+                    scheduledAt: string | null;
+                    result: string;
+                    notes: string | null;
+                } | null;
                 policy: {
                     /** @enum {string} */
                     advanceType: "fixed" | "percentage" | "none";
@@ -1275,6 +1378,86 @@ export interface components {
             id: string;
             /** @enum {string} */
             status: "pending" | "approved" | "rejected";
+        };
+        CalendarDay: {
+            branch: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                timezone: string;
+            };
+            date: string;
+            courts: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                slots: {
+                    /** Format: date-time */
+                    startAt: string;
+                    /** Format: date-time */
+                    endAt: string;
+                }[];
+                bookings: {
+                    /** Format: date-time */
+                    startAt: string;
+                    /** Format: date-time */
+                    endAt: string;
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    source: "app" | "manual" | "block";
+                    /** @enum {string} */
+                    status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+                    currency: string;
+                    total: number;
+                    advanceDue: number;
+                    name: string | null;
+                    /** @description Manual bookings only, private to the vendor */
+                    customerPhone: string | null;
+                }[];
+            }[];
+        };
+        ManualBooking: {
+            /** Format: uuid */
+            courtId: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            customerName: string;
+            customerPhone?: string;
+        };
+        CalendarEntry: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+        };
+        CourtBlock: {
+            /** Format: uuid */
+            courtId: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            reason: string;
+        };
+        StaffMember: {
+            /** Format: uuid */
+            userId: string;
+            name: string | null;
+            permissions: string[];
+            branchIds: string[];
+            active: boolean;
+        };
+        StaffInput: {
+            phone: string;
+            permissions: ("view_bookings" | "create_bookings" | "confirm_payments" | "edit_prices" | "view_revenue" | "manage_staff")[];
+            /**
+             * @description Empty means every branch
+             * @default []
+             */
+            branchIds: string[];
         };
         AdminLogin: {
             email: string;
@@ -2452,6 +2635,232 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentAccountCreated"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_day: {
+        parameters: {
+            query: {
+                branchId: string;
+                date: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarDay"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_manual: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualBooking"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarEntry"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_block: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CourtBlock"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarEntry"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_noShow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarEntry"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_listStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffMember"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_addStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffInput"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        userId: string;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    CalendarController_removeStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendorId: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        userId: string;
+                    };
                 };
             };
             /** @description Error */

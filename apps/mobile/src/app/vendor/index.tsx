@@ -76,6 +76,7 @@ export default function Vendor() {
         <View style={{ gap: 12 }}>
           <Text style={ui.heading}>{setup.vendor.businessName}</Text>
           <Message>{message}</Message>
+          <TextButton title="Calendar" onPress={() => router.push('/vendor/calendar')} />
           <TextButton title="Payments to check" onPress={() => router.push('/vendor/payments')} />
           <Text style={ui.label}>Venues</Text>
           {setup.branches.length === 0 && <Text>No venues yet.</Text>}
@@ -99,7 +100,7 @@ export default function Vendor() {
             </Text>
           ))}
           <Text style={styles.note}>
-            Add venues, courts, opening hours, prices and payment accounts on the SportsLink website, signed in with
+            Add venues, courts, opening hours, prices, payment accounts and staff on the SportsLink website, signed in with
             this number. For now, these are edited on the website.
           </Text>
         </View>
