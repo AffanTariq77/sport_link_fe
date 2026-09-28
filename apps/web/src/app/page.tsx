@@ -27,6 +27,9 @@ export default async function Home() {
             <Link href="/venues" className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-neutral-900">
               Book a venue
             </Link>
+            <Link href="/matches" className="px-4 py-2 underline">
+              Matches
+            </Link>
             <Link href="/bookings" className="px-4 py-2 underline">
               My bookings
             </Link>

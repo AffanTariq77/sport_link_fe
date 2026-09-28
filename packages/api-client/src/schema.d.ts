@@ -580,6 +580,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MatchesController_list"];
+        put?: never;
+        post: operations["MatchesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MatchesController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MatchesController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MatchesController_join"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/requests/{userId}/{decision}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MatchesController_decide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/players/{userId}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MatchesController_remove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MatchesController_leave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MatchesController_cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/pay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MatchesController_payInfo"];
+        put?: never;
+        post: operations["MatchesController_pay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/auth/login": {
         parameters: {
             query?: never;
@@ -1458,6 +1602,141 @@ export interface components {
              * @default []
              */
             branchIds: string[];
+        };
+        CreateMatch: {
+            sport: string;
+            /** Format: uuid */
+            bookingId?: string;
+            unlisted?: {
+                name: string;
+                address: string;
+                latitude: number;
+                longitude: number;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+            };
+            acceptedUnlistedWarning?: boolean;
+            slotsTotal: number;
+            hostBrings: number;
+            /** @default {} */
+            filters: components["schemas"]["MatchFilters"];
+        };
+        MatchFilters: {
+            minAge?: number;
+            maxAge?: number;
+            /**
+             * @description female for women-only
+             * @enum {string|null}
+             */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say" | null;
+            verifiedOnly?: boolean;
+        };
+        MatchSummary: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "open" | "full" | "in_progress" | "result_pending" | "completed" | "disputed" | "cancelled";
+            sport: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            /** Format: date-time */
+            joinCutoffAt: string;
+            timezone: string;
+            slotsTotal: number;
+            slotsFilled: number;
+            filters: components["schemas"]["MatchFilters"];
+            host: {
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+            };
+            listed: boolean;
+            /** Format: uuid */
+            bookingId: string | null;
+            venue: {
+                name: string;
+                detail: string;
+            };
+            pricePerPlayer: number | null;
+            currency: string | null;
+        };
+        MatchDetail: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "open" | "full" | "in_progress" | "result_pending" | "completed" | "disputed" | "cancelled";
+            sport: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            /** Format: date-time */
+            joinCutoffAt: string;
+            timezone: string;
+            slotsTotal: number;
+            slotsFilled: number;
+            filters: components["schemas"]["MatchFilters"];
+            host: {
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+            };
+            listed: boolean;
+            /** Format: uuid */
+            bookingId: string | null;
+            venue: {
+                name: string;
+                detail: string;
+            };
+            pricePerPlayer: number | null;
+            currency: string | null;
+            isHost: boolean;
+            canJoin: boolean;
+            me: {
+                /** @enum {string} */
+                status: "requested" | "approved" | "confirmed" | "declined" | "withdrawn" | "removed" | "waitlisted";
+                /** @enum {string|null} */
+                shareStatus: "pending" | "submitted" | "confirmed" | "rejected" | "refunded" | "void" | null;
+                shareAmount: number | null;
+            } | null;
+            players: {
+                /** Format: uuid */
+                userId: string;
+                name: string | null;
+                /** @enum {string} */
+                status: "requested" | "approved" | "confirmed" | "declined" | "withdrawn" | "removed" | "waitlisted";
+                /** @enum {string|null} */
+                shareStatus: "pending" | "submitted" | "confirmed" | "rejected" | "refunded" | "void" | null;
+            }[];
+        };
+        JoinMatch: {
+            acceptedUnlistedWarning?: boolean;
+        };
+        MatchPlayerStatus: {
+            /** @enum {string} */
+            status: "requested" | "approved" | "confirmed" | "declined" | "withdrawn" | "removed" | "waitlisted";
+        };
+        MatchPayInfo: {
+            amount: number | null;
+            currency: string;
+            /** @enum {string|null} */
+            shareStatus: "pending" | "submitted" | "confirmed" | "rejected" | "refunded" | "void" | null;
+            accounts: {
+                /** @enum {string} */
+                method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash";
+                accountTitle: string;
+                bankName: string | null;
+                accountNumber: string | null;
+            }[];
+        };
+        PayShare: {
+            /** @enum {string} */
+            method: "jazzcash" | "easypaisa" | "bank_transfer" | "cash";
+            txnReference: string;
         };
         AdminLogin: {
             email: string;
@@ -2860,6 +3139,356 @@ export interface operations {
                     "application/json": {
                         /** Format: uuid */
                         userId: string;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_list: {
+        parameters: {
+            query?: {
+                sport?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchSummary"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchSummary"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchDetail"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_join: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JoinMatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchPlayerStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_decide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+                decision: "approve" | "decline";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchPlayerStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchPlayerStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_leave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchPlayerStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_cancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "open" | "full" | "in_progress" | "result_pending" | "completed" | "disputed" | "cancelled";
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_payInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchPayInfo"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    MatchesController_pay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PayShare"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        shareStatus: "pending" | "submitted" | "confirmed" | "rejected" | "refunded" | "void";
                     };
                 };
             };

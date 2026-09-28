@@ -51,6 +51,7 @@ export default function Home() {
         )}
         {canSubmit && <TextButton title="Verify your identity" onPress={() => setVerifyNow(true)} />}
         <Button title="Book a venue" onPress={() => router.push('/venues')} />
+        <Button title="Find or create a match" onPress={() => router.push('/matches')} />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
         <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
         <TextButton title="Sign out" onPress={leave} busy={busy} />

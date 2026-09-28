@@ -9,6 +9,9 @@ export default function Layout() {
         <Stack.Screen name="venues/index" options={{ title: 'Book a venue' }} />
         <Stack.Screen name="venues/[id]" options={{ title: '' }} />
         <Stack.Screen name="bookings" options={{ title: 'My bookings' }} />
+        <Stack.Screen name="matches/index" options={{ title: 'Matches' }} />
+        <Stack.Screen name="matches/new" options={{ title: 'Create a match' }} />
+        <Stack.Screen name="matches/[id]" options={{ title: 'Match' }} />
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
         <Stack.Screen name="vendor/index" options={{ title: 'Vendor' }} />
         <Stack.Screen name="vendor/payments" options={{ title: 'Payments to check' }} />
