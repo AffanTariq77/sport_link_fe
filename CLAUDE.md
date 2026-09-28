@@ -18,7 +18,7 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 ## API
 
 - The API client is generated from the backend's OpenAPI spec into `packages/api-client` (`openapi-fetch` + `openapi-typescript`). After backend changes, run `API_URL=<api> pnpm --filter @sportslink/api-client generate`. Never hand-write API types or edit `schema.d.ts`.
-- Sign-in is built: web in `apps/web/src/app/sign-in`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile in `apps/mobile/App.tsx` and `src/session.ts` (expo-secure-store). Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
+- Onboarding is built (sign in, then profile, then ID upload): web in `apps/web/src/app/sign-in`, `onboarding/`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile in `apps/mobile/App.tsx`, `src/screens/` and `src/session.ts` (expo-secure-store, expo-image-picker). Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
 - Never call the database or third-party services directly from the frontend.
 - Auth tokens: secure storage on mobile (expo-secure-store), httpOnly cookies on web. Never localStorage.
 
@@ -51,7 +51,7 @@ Do not invent a brand. When it is ready, put the tokens in one place per app and
 ## Next steps (Phase 1)
 
 1. Brand and design system once the brand is chosen
-2. CNIC upload and guardian consent flow (OTP sign-in is done)
+2. Guardian consent flow for minors (sign-in, profile and ID upload are done)
 4. Venue search, venue page, booking with split payment and payment confirmation status
 5. Vendor mode: onboarding, courts, pricing, calendar with manual bookings and blocks, payment confirmation queue
 6. Create and join match, host approval

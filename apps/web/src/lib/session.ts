@@ -12,10 +12,27 @@ export async function accessToken() {
   return (await cookies()).get(ACCESS_COOKIE)?.value;
 }
 
+/** Authorization header for API calls on behalf of the signed-in user. */
+export async function authHeaders() {
+  return { authorization: `Bearer ${await accessToken()}` };
+}
+
 /** The signed-in user, or null. */
 export async function currentUser() {
-  const token = await accessToken();
-  if (!token) return null;
-  const { data } = await api.GET('/auth/me', { headers: { authorization: `Bearer ${token}` } });
+  if (!(await accessToken())) return null;
+  const { data } = await api.GET('/auth/me', { headers: await authHeaders() });
   return data ?? null;
+}
+
+/**
+ * Where a signed-in user must go before using the app: profile first, then ID if the
+ * `verification.required_at` setting asks for it at sign-up. Null when onboarding is complete.
+ */
+export async function onboardingStep(user: Schemas['User']) {
+  if (!user.name) return '/onboarding/profile' as const;
+  const { data } = await api.GET('/me/verification', { headers: await authHeaders() });
+  if (data?.requiredAt === 'signup' && (data.status === 'none' || data.status === 'rejected')) {
+    return '/onboarding/verify' as const;
+  }
+  return null;
 }

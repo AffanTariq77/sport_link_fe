@@ -36,11 +36,15 @@ async function accessToken() {
   return (await refreshing)?.accessToken ?? null;
 }
 
+/** Authorization header for the signed-in user. */
+export async function authHeaders() {
+  return { authorization: `Bearer ${await accessToken()}` };
+}
+
 /** The signed-in user, or null. Throws if the API cannot be reached. */
 export async function currentUser() {
-  const token = await accessToken();
-  if (!token) return null;
-  const { data } = await api.GET('/auth/me', { headers: { authorization: `Bearer ${token}` } });
+  if (!(await accessToken())) return null;
+  const { data } = await api.GET('/auth/me', { headers: await authHeaders() });
   return data ?? null;
 }
 

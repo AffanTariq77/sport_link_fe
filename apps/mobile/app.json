@@ -25,7 +25,14 @@
     },
     "scheme": "sportslink",
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "SportsLink uses your photos to verify your identity.",
+          "cameraPermission": "SportsLink uses your camera to photograph your ID for verification."
+        }
+      ]
     ]
   }
 }
