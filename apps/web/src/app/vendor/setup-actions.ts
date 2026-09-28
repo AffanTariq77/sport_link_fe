@@ -243,3 +243,23 @@ export async function uploadInvoiceProof(vendorId: string, invoiceId: string, _:
   if (error) return fail(error);
   redirect('/vendor/billing?saved=proof');
 }
+
+export async function vendorCancel(back: string, id: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/vendor/bookings/{id}/cancel', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: { reason: text(form, 'reason') },
+  });
+  if (error) return fail(error);
+  redirect(back);
+}
+
+export async function refundSent(id: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/vendor/refunds/{id}/sent', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: { reference: text(form, 'reference') },
+  });
+  if (error) return fail(error);
+  redirect('/vendor/refunds?saved=1');
+}

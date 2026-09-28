@@ -97,6 +97,9 @@ export default async function VendorPage() {
         <Link href="/chats" className="underline">
           Messages from players
         </Link>
+        <Link href="/vendor/refunds" className="underline">
+          Refunds to send
+        </Link>
         <Link href="/vendor/billing" className="underline">
           Billing
         </Link>

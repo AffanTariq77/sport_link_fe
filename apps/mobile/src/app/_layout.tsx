@@ -18,6 +18,7 @@ export default function Layout() {
         <Stack.Screen name="vendor/index" options={{ title: 'Vendor' }} />
         <Stack.Screen name="vendor/payments" options={{ title: 'Payments to check' }} />
         <Stack.Screen name="vendor/calendar" options={{ title: 'Calendar' }} />
+        <Stack.Screen name="vendor/refunds" options={{ title: 'Refunds to send' }} />
       </Stack>
       <StatusBar style="auto" />
     </>

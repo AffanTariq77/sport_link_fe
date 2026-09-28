@@ -30,3 +30,18 @@ export async function submitPayment(bookingId: string, _: PayState, form: FormDa
   if (!data) return { message: error?.message ?? 'Something went wrong. Please try again.' };
   redirect(`/bookings?held=${bookingId}`);
 }
+
+export async function cancelBooking(id: string): Promise<PayState> {
+  const { data, error } = await api.POST('/bookings/{id}/cancel', { params: { path: { id } }, headers: await authHeaders() });
+  if (!data) return { message: error?.message ?? 'Something went wrong. Please try again.' };
+  redirect(`/bookings?cancelled=${data.refunds ? 'refund' : 'none'}`);
+}
+
+export async function answerRefund(id: string, received: boolean): Promise<PayState> {
+  const headers = await authHeaders();
+  const { error } = received
+    ? await api.POST('/refunds/{id}/received', { params: { path: { id } }, headers })
+    : await api.POST('/refunds/{id}/dispute', { params: { path: { id } }, headers, body: {} });
+  if (error) return { message: error.message };
+  redirect('/bookings');
+}

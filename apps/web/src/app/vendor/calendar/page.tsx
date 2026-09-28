@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
-import { blockSlot, manualBooking, markNoShow } from '../setup-actions';
+import { blockSlot, manualBooking, markNoShow, vendorCancel } from '../setup-actions';
 
 export const metadata: Metadata = { title: 'Calendar · SportsLink' };
 
@@ -81,6 +81,15 @@ export default async function CalendarPage(props: PageProps<'/vendor/calendar'>)
                     </p>
                     {booking.status === 'confirmed' && booking.source !== 'block' && hasStarted(booking.startAt) && (
                       <ActionForm action={markNoShow.bind(null, back, booking.id)} button="Mark as no-show" className="mt-2 flex" />
+                    )}
+                    {['held', 'pending_payment', 'confirmed'].includes(booking.status) && !hasStarted(booking.startAt) && (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer underline">{booking.source === 'block' ? 'Remove block' : 'Cancel booking'}</summary>
+                        <ActionForm action={vendorCancel.bind(null, back, booking.id)} button="Cancel" className="mt-2 flex flex-col gap-2">
+                          <input name="reason" required minLength={3} maxLength={300} placeholder="Reason, shown to the player" className={input} />
+                          {booking.source === 'app' && <p className="text-xs">The player gets a full refund of what they paid.</p>}
+                        </ActionForm>
+                      </details>
                     )}
                   </li>
                 );
