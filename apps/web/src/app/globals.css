@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+/* Shared components in packages/ui use Tailwind classes too. */
+@source '../../../../packages/ui/src';
 
 /* Placeholder theme. Replace with SportsLink brand tokens when the brand is ready. */
 :root {
@@ -17,3 +19,4 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+

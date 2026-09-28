@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useActionState } from 'react';
+import { type FormEvent, type ReactNode, startTransition, useActionState } from 'react';
 
 export type FormState = { message?: string };
 type Action = (state: FormState, form: FormData) => Promise<FormState>;
@@ -19,7 +19,7 @@ export function ActionForm({
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   return (
-    <form action={formAction} className={className}>
+    <form onSubmit={keepValues(formAction)} className={className}>
       {children}
       {state.message && (
         <p aria-live="polite" className="text-sm">
@@ -34,6 +34,18 @@ export function ActionForm({
       </button>
     </form>
   );
+}
+
+/**
+ * Submit handler that runs a server action without React 19's automatic form reset, so a form that comes back
+ * with an error keeps what the person typed (and attached).
+ */
+export function keepValues(formAction: (form: FormData) => void) {
+  return (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget, (e.nativeEvent as SubmitEvent).submitter);
+    startTransition(() => formAction(form));
+  };
 }
 
 export const input = 'w-full rounded-md border border-neutral-400 bg-transparent px-3 py-2 text-base';

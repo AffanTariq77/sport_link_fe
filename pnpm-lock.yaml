@@ -14,6 +14,12 @@ importers:
 
   apps/admin:
     dependencies:
+      '@sportslink/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@sportslink/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 16.3.6
         version: 16.3.6(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -103,6 +109,9 @@ importers:
       '@sportslink/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@sportslink/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 16.3.6
         version: 16.3.6(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -147,6 +156,19 @@ importers:
       openapi-typescript:
         specifier: ^7.13.0
         version: 7.13.0(typescript@5.9.3)
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
+  packages/ui:
+    dependencies:
+      react:
+        specifier: ^19
+        version: 19.2.8
+    devDependencies:
+      '@types/react':
+        specifier: ^19
+        version: 19.2.18
       typescript:
         specifier: ^5
         version: 5.9.3

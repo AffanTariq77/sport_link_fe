@@ -1,5 +1,6 @@
 'use client';
 
+import { keepValues } from '@sportslink/ui';
 import { useActionState } from 'react';
 import { signIn, type SignInState } from '../actions';
 
@@ -10,7 +11,7 @@ export function SignInForm() {
   const [state, action, pending] = useActionState<SignInState, FormData>(signIn, { step: 'phone', phone: '' });
 
   return (
-    <form action={action} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={keepValues(action)} className="flex w-full max-w-sm flex-col gap-4">
       <label className="flex flex-col gap-1">
         <span className="text-sm font-medium">Mobile number</span>
         <input

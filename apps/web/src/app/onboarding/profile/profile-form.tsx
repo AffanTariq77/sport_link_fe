@@ -1,5 +1,6 @@
 'use client';
 
+import { keepValues } from '@sportslink/ui';
 import { useActionState } from 'react';
 import { type FormState, saveProfile } from '../actions';
 import { button, input, label, labelText } from '../fields';
@@ -14,7 +15,7 @@ const genders = [
 export function ProfileForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(saveProfile, {});
   return (
-    <form action={action} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={keepValues(action)} className="flex w-full max-w-sm flex-col gap-4">
       <label className={label}>
         <span className={labelText}>Full name, as on your ID</span>
         <input name="name" autoComplete="name" required maxLength={80} className={input} />

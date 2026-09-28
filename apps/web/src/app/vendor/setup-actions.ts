@@ -2,7 +2,7 @@
 
 import { toMinor } from '@sportslink/api-client';
 import { redirect } from 'next/navigation';
-import type { FormState } from '@/components/action-form';
+import type { FormState } from '@sportslink/ui';
 import { api } from '@/lib/api';
 import { authHeaders } from '@/lib/session';
 

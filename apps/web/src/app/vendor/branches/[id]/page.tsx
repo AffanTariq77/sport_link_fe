@@ -2,7 +2,7 @@ import { formatMoney, fromMinor } from '@sportslink/api-client';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ActionForm, input, labelClass } from '@/components/action-form';
+import { ActionForm, input, labelClass } from '@sportslink/ui';
 import { BranchFields } from '@/components/branch-fields';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';

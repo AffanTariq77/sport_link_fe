@@ -1,4 +1,4 @@
-import { ActionForm, input, labelClass } from './action-form';
+import { ActionForm, input, labelClass } from '@sportslink/ui';
 
 export function BranchFields({
   action,

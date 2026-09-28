@@ -1,5 +1,6 @@
 'use client';
 
+import { keepValues } from '@sportslink/ui';
 import type { Schemas } from '@sportslink/api-client';
 import { paymentMethodName } from '@sportslink/api-client';
 import { useActionState, useState } from 'react';
@@ -14,7 +15,7 @@ export function PayForm({ bookingId, info }: { bookingId: string; info: Schemas[
   const [method, setMethod] = useState(info.accounts[0]?.method ?? (info.payAtVenueAllowed ? 'cash' : ''));
 
   return (
-    <form action={action} className="flex w-full flex-col gap-4">
+    <form onSubmit={keepValues(action)} className="flex w-full flex-col gap-4">
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-sm font-medium">How did you pay?</legend>
         {info.accounts.map((a) => (

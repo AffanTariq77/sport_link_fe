@@ -1,5 +1,6 @@
 'use client';
 
+import { keepValues } from '@sportslink/ui';
 import { useActionState } from 'react';
 import { type FormState, submitDocument } from '../actions';
 import { button, input, label, labelText } from '../fields';
@@ -9,7 +10,7 @@ const accept = 'image/jpeg,image/png,image/webp';
 export function VerifyForm({ docLabel }: { docLabel: string }) {
   const [state, action, pending] = useActionState<FormState, FormData>(submitDocument, {});
   return (
-    <form action={action} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={keepValues(action)} className="flex w-full max-w-sm flex-col gap-4">
       <label className={label}>
         <span className={labelText}>{docLabel} number</span>
         <input name="docNumber" inputMode="numeric" placeholder="xxxxx-xxxxxxx-x" required maxLength={15} className={input} />
