@@ -2,6 +2,7 @@ import type { Schemas } from '@sportslink/api-client';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { GuardianStep, Wards } from '../screens/Family';
 import { Profile } from '../screens/Profile';
 import { SignIn } from '../screens/SignIn';
 import { Verify } from '../screens/Verify';
@@ -50,8 +51,15 @@ export default function Home() {
           <Text style={ui.body}>We are checking your ID and will let you know when it is done.</Text>
         )}
         {canSubmit && <TextButton title="Verify your identity" onPress={() => setVerifyNow(true)} />}
-        <Button title="Book a venue" onPress={() => router.push('/venues')} />
-        <Button title="Find or create a match" onPress={() => router.push('/matches')} />
+        {user.locked ? (
+          <GuardianStep />
+        ) : (
+          <>
+            <Button title="Book a venue" onPress={() => router.push('/venues')} />
+            <Button title="Find or create a match" onPress={() => router.push('/matches')} />
+          </>
+        )}
+        <Wards />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
         <TextButton title="Chats" onPress={() => router.push('/chats')} />
         <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />

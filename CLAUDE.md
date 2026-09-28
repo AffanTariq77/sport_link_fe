@@ -24,6 +24,7 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 - Vendor calendar and staff: web `vendor/calendar` (day view per court, walk-ins, blocks, no-shows) and a staff section on `vendor/`; mobile `src/app/vendor/calendar.tsx` (day view, walk-ins and blocks).
 - Matches: web `matches/` (list, `new`, `[id]` with join, host approvals, pay share), mobile `src/app/matches/`. The unlisted venue warning (`components/unlisted-warning.tsx` on web, an alert on mobile) is shown every time before creating or joining.
 - Chat: web `chats/` (thread polls through the `chats/[id]/poll` route because the browser has no API token; phone warning with Send anyway; report and block), mobile `src/app/chats/` (polling, alert for the phone warning, long-press a message to block). Entry points on matches, bookings and vendor pages.
+- Minors: a locked minor sees the guardian step instead of booking (web `components/family.tsx`, mobile `src/screens/Family.tsx`); guardians see consent requests with the API's consent text and their children's activity (web `family/[id]`).
 - Cancellations and refunds: player cancel and refund confirmation on web `bookings` and mobile `bookings.tsx`; vendor cancel from the web calendar; refunds to send on web `vendor/refunds` and mobile `vendor/refunds.tsx`.
 - Billing: web `vendor/billing` (running total, invoices, proof upload), admin `(panel)/invoices` (run billing, proof via `invoice-proof/[id]`, paid, write off), mobile vendor screen summary.
 - Admin panel (`apps/admin`): sign-in with two-factor code, admin token in an httpOnly `sla_admin` cookie, route group `(panel)` with navigation filtered by permissions: overview, identity checks (images streamed through `documents/[id]/[side]`, never public or cached), venues (visits, billing, status), payment accounts, users and bans, reports, audit log.
@@ -61,7 +62,7 @@ Do not invent a brand. When it is ready, put the tokens in one place per app and
 ## Next steps (Phase 1)
 
 1. Brand and design system once the brand is chosen
-2. Guardian consent flow for minors (sign-in, profile and ID upload are done)
+2. Onboarding polish (sign-in, profile, ID upload and guardian consent are done)
 4. Venue search, venue page, booking with split payment and payment confirmation status
 5. Vendor mode: venue photos (onboarding, courts, pricing, calendar, manual bookings, blocks, payment queue and staff are done)
 6. Match results (create, join, host approval and shares are done)

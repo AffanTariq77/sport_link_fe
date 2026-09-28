@@ -132,6 +132,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/guardian": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuardianController_mine"];
+        put?: never;
+        post: operations["GuardianController_request"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/guardian/consent-text": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuardianController_consentText"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/wards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuardianController_wards"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/wards/{id}/consent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GuardianController_consent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/wards/{id}/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuardianController_activity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sports": {
         parameters: {
             query?: never;
@@ -1418,6 +1498,8 @@ export interface components {
             status: "pending_verification" | "active" | "suspended" | "banned" | "deleted";
             isMinor: boolean;
             countryCode: string;
+            /** @description Minor waiting for guardian consent */
+            locked: boolean;
         };
         RefreshRequest: {
             refreshToken: string;
@@ -1449,6 +1531,56 @@ export interface components {
             docType: "cnic" | "b_form";
             /** @enum {string} */
             requiredAt: "signup" | "before_participation";
+        };
+        MyGuardian: {
+            /** @enum {string} */
+            status: "not_needed" | "none" | "pending" | "accepted";
+            guardianName: string | null;
+        };
+        GuardianRequest: {
+            phone: string;
+        };
+        ConsentText: {
+            version: string;
+            text: string;
+        };
+        Ward: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            dob: string | null;
+            /** Format: date-time */
+            consentAt: string | null;
+        };
+        GuardianDecision: {
+            accept: boolean;
+            version?: string;
+        };
+        WardActivity: {
+            minor: {
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+            };
+            bookings: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                startAt: string;
+                /** @enum {string} */
+                status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+                venue: string;
+                court: string;
+                timezone: string;
+            }[];
+            matches: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                startAt: string;
+                sport: string;
+                role: string;
+            }[];
         };
         Sport: {
             slug: string;
@@ -2679,6 +2811,192 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VerificationStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyGuardian"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_request: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuardianRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "pending";
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_consentText: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentText"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_wards: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ward"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_consent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuardianDecision"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "accepted" | "declined";
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    GuardianController_activity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WardActivity"];
                 };
             };
             /** @description Error */
