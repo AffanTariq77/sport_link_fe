@@ -16,6 +16,18 @@ export function formatMoney(minor: number, currency: string) {
   }).format(amount);
 }
 
+/** A typed amount (for example "4,000" rupees) to the API's minor units. Null if it is not a positive amount. */
+export function toMinor(typed: string, currency: string) {
+  const amount = Number(typed.replace(/[,\s]/g, ''));
+  if (!Number.isFinite(amount) || amount <= 0) return null;
+  return Math.round(amount * 10 ** (MINOR_DIGITS[currency] ?? 2));
+}
+
+/** Minor units back to a plain editable number, for example 400000 PKR -> "4000". */
+export function fromMinor(minor: number, currency: string) {
+  return String(minor / 10 ** (MINOR_DIGITS[currency] ?? 2));
+}
+
 /** "19:00" at the venue, whatever the viewer's own time zone. */
 export function formatTime(iso: string, timeZone: string) {
   return new Intl.DateTimeFormat('en-GB', { timeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(

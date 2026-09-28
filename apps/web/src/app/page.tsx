@@ -31,11 +31,9 @@ export default async function Home() {
               My bookings
             </Link>
           </div>
-          {!!vendor && (
-            <Link href="/vendor/payments" className="text-sm underline">
-              Vendor: payments to check
-            </Link>
-          )}
+          <Link href="/vendor" className="text-sm underline">
+            {vendor ? 'Vendor: your venues and payments' : 'List your venue'}
+          </Link>
           <button className="text-sm underline">Sign out</button>
         </form>
       ) : (

@@ -22,7 +22,7 @@ export default function Home() {
     setUser(u);
     const headers = await authHeaders();
     setVerification(u ? ((await api.GET('/me/verification', { headers })).data ?? null) : null);
-    setIsVendor(!!u && !!(await api.GET('/vendor/access', { headers })).data?.vendors.length);
+    setIsVendor(!!u && !!(await api.GET('/vendor/setup', { headers })).data?.vendor);
   }
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Home() {
         {canSubmit && <TextButton title="Verify your identity" onPress={() => setVerifyNow(true)} />}
         <Button title="Book a venue" onPress={() => router.push('/venues')} />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
-        {isVendor && <TextButton title="Vendor: payments to check" onPress={() => router.push('/vendor/payments')} />}
+        <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
     );
