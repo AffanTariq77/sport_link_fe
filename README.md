@@ -8,7 +8,9 @@ Monorepo for the SportsLink player and vendor apps and the admin panel. The API 
 | Admin panel | `apps/admin` | Next.js 16, Tailwind | http://localhost:3002 |
 | Mobile (iOS, Android) | `apps/mobile` | Expo SDK 57, React Native | Expo Go or a simulator |
 
-The API runs on http://localhost:3000.
+The API runs on http://localhost:3000 (see `sport_link_be`). If it runs elsewhere, set `API_URL` in
+`apps/web/.env.local` and `apps/admin/.env.local`, and `EXPO_PUBLIC_API_PORT` (or `EXPO_PUBLIC_API_URL`) in
+`apps/mobile/.env.local`.
 
 ## Getting started
 
@@ -20,6 +22,9 @@ pnpm dev                                  # all apps
 pnpm --filter @sportslink/web dev         # one app
 pnpm --filter @sportslink/mobile dev      # Expo, scan the QR code with Expo Go
 ```
+
+After backend API changes, regenerate the client with the API running:
+`API_URL=http://localhost:3000 pnpm --filter @sportslink/api-client generate`.
 
 ## Scripts
 
