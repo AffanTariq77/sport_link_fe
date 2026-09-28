@@ -1,33 +1,15 @@
 import type { Schemas } from '@sportslink/api-client';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Profile } from './src/screens/Profile';
-import { type Runner, SignIn } from './src/screens/SignIn';
-import { Verify } from './src/screens/Verify';
-import { api, API_URL, authHeaders, currentUser, signOut } from './src/session';
-import { failed, Message, styles as ui, TextButton } from './src/ui';
-
-const offline = `Cannot reach SportsLink. Check your connection and that the API is running at ${API_URL}.`;
-
-const run: Runner = async (setBusy, setMessage, task) => {
-  setBusy(true);
-  setMessage('');
-  try {
-    await task();
-  } catch (e) {
-    // Network failures from fetch are TypeError (React Native) or FetchError (expo/fetch). Anything else is a bug.
-    const network = e instanceof TypeError || (e instanceof Error && e.name === 'FetchError');
-    if (!network) console.error(e);
-    setMessage(network ? offline : failed);
-  } finally {
-    setBusy(false);
-  }
-};
+import { router } from 'expo-router';
+import { Profile } from '../screens/Profile';
+import { SignIn } from '../screens/SignIn';
+import { Verify } from '../screens/Verify';
+import { api, authHeaders, currentUser, signOut } from '../session';
+import { Button, Message, offline, run, styles as ui, TextButton } from '../ui';
 
 // Onboarding goes sign in → profile → ID (when the verification.required_at setting asks for it at sign-up).
-// Expo Router replaces this when the app gets real navigation (venues, matches).
-export default function App() {
+export default function Home() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<Schemas['User'] | null>(null);
   const [verification, setVerification] = useState<Schemas['VerificationStatus'] | null>(null);
@@ -65,6 +47,8 @@ export default function App() {
           <Text style={ui.body}>We are checking your ID and will let you know when it is done.</Text>
         )}
         {canSubmit && <TextButton title="Verify your identity" onPress={() => setVerifyNow(true)} />}
+        <Button title="Book a venue" onPress={() => router.push('/venues')} />
+        <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
     );
@@ -76,7 +60,6 @@ export default function App() {
         {screen}
         {!!message && <Message>{message}</Message>}
       </ScrollView>
-      <StatusBar style="auto" />
     </KeyboardAvoidingView>
   );
 }

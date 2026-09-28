@@ -4,8 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { Button, failed, Field, Message, styles, TextButton } from '../ui';
-import type { Runner } from './SignIn';
+import { Button, failed, Field, Message, type Runner, styles, TextButton } from '../ui';
 
 type Photo = { uri: string };
 const MAX_BYTES = 5_000_000; // Matches the API setting verification.max_image_bytes.

@@ -132,6 +132,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/sports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["VenuesController_listSports"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/venues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["VenuesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/venues/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["VenuesController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/courts/{id}/slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["VenuesController_slots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_hold"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BookingsController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -201,6 +297,137 @@ export interface components {
             docType: "cnic" | "b_form";
             /** @enum {string} */
             requiredAt: "signup" | "before_participation";
+        };
+        Sport: {
+            slug: string;
+            name: string;
+        };
+        VenueSummary: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            city: string;
+            address: string;
+            facilities: string[];
+            sports: string[];
+            courtCount: number;
+            currency: string;
+            /** @description Lowest hourly price, minor units */
+            fromPricePerHour: number | null;
+        };
+        Venue: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            city: string;
+            address: string;
+            facilities: string[];
+            currency: string;
+            rules: string | null;
+            timezone: string;
+            courts: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                surface: string | null;
+                slotMinutes: number;
+                sports: string[];
+            }[];
+            policy: components["schemas"]["VenuePolicy"];
+            paymentMethods: ("jazzcash" | "easypaisa" | "bank_transfer" | "cash")[];
+        };
+        VenuePolicy: {
+            /** @enum {string} */
+            advanceType: "fixed" | "percentage" | "none";
+            /** @description Basis points if percentage, minor units if fixed */
+            advanceValue: number;
+            cancelRefund: boolean;
+            cancelWindowHours: number;
+            noShowRefund: boolean;
+        };
+        CourtSlots: {
+            currency: string;
+            slots: {
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                /** @description Minor units */
+                price: number;
+                available: boolean;
+            }[];
+        };
+        HoldRequest: {
+            /** Format: uuid */
+            courtId: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+        };
+        Hold: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            currency: string;
+            /** @description Minor units */
+            total: number;
+            /** @description Minor units */
+            advanceDue: number;
+            /** Format: date-time */
+            holdExpiresAt: string | null;
+            policy: {
+                /** @enum {string} */
+                advanceType: "fixed" | "percentage" | "none";
+                advanceValue: number;
+                cancelRefund: boolean;
+                cancelWindowHours: number;
+                noShowRefund: boolean;
+            };
+        };
+        MyBooking: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            currency: string;
+            /** @description Minor units */
+            total: number;
+            /** @description Minor units */
+            advanceDue: number;
+            /** Format: date-time */
+            holdExpiresAt: string | null;
+            policy: {
+                /** @enum {string} */
+                advanceType: "fixed" | "percentage" | "none";
+                advanceValue: number;
+                cancelRefund: boolean;
+                cancelWindowHours: number;
+                noShowRefund: boolean;
+            };
+            /** Format: date-time */
+            paymentDeadlineAt: string | null;
+            court: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+            };
+            venue: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                city: string;
+                timezone: string;
+            };
         };
     };
     responses: never;
@@ -465,6 +692,187 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VerificationStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VenuesController_listSports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Sport"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VenuesController_list: {
+        parameters: {
+            query?: {
+                sport?: string;
+                city?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VenueSummary"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VenuesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Venue"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VenuesController_slots: {
+        parameters: {
+            query: {
+                date: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourtSlots"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    BookingsController_hold: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HoldRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Hold"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    BookingsController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyBooking"][];
                 };
             };
             /** @description Error */

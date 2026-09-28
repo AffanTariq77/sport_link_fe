@@ -1,9 +1,33 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
+import { API_URL } from './session';
 
 // Placeholder styling until the SportsLink brand is chosen.
 
 export const failed = 'Something went wrong. Please try again.';
+export const offline = `Cannot reach SportsLink. Check your connection and that the API is running at ${API_URL}.`;
+
+/** Runs an API task with a busy flag and a user-facing message on failure. */
+export type Runner = (
+  setBusy: (b: boolean) => void,
+  setMessage: (m: string) => void,
+  task: () => Promise<unknown>,
+) => Promise<void>;
+
+export const run: Runner = async (setBusy, setMessage, task) => {
+  setBusy(true);
+  setMessage('');
+  try {
+    await task();
+  } catch (e) {
+    // Network failures from fetch are TypeError (React Native) or FetchError (expo/fetch). Anything else is a bug.
+    const network = e instanceof TypeError || (e instanceof Error && e.name === 'FetchError');
+    if (!network) console.error(e);
+    setMessage(network ? offline : failed);
+  } finally {
+    setBusy(false);
+  }
+};
 
 export function Field({ label, ...props }: TextInputProps & { label: string }) {
   return (

@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
       <h1 className="text-3xl font-semibold">SportsLink</h1>
-      <p className="max-w-md text-base">Book a venue, fill your match, find players nearby. Coming soon.</p>
+      <p className="max-w-md text-base">Book a venue, fill your match, find players nearby.</p>
       {user ? (
         <form action={signOut} className="flex flex-col items-center gap-2">
           <p>You are signed in{user.name ? ` as ${user.name}` : ''}.</p>
@@ -22,6 +22,14 @@ export default async function Home() {
               Verify your identity
             </Link>
           )}
+          <div className="flex gap-4">
+            <Link href="/venues" className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-neutral-900">
+              Book a venue
+            </Link>
+            <Link href="/bookings" className="px-4 py-2 underline">
+              My bookings
+            </Link>
+          </div>
           <button className="text-sm underline">Sign out</button>
         </form>
       ) : (

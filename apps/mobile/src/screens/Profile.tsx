@@ -2,8 +2,7 @@ import type { Schemas } from '@sportslink/api-client';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { Button, failed, Field, Message, styles } from '../ui';
-import type { Runner } from './SignIn';
+import { Button, failed, Field, Message, type Runner, styles } from '../ui';
 
 type Gender = Schemas['ProfileUpdate']['gender'];
 const genders: [Gender, string][] = [

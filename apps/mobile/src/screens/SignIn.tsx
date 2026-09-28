@@ -2,7 +2,7 @@ import type { Schemas } from '@sportslink/api-client';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { api, saveTokens } from '../session';
-import { Button, failed, Field, Message, styles, TextButton } from '../ui';
+import { Button, failed, Field, Message, type Runner, styles, TextButton } from '../ui';
 
 export function SignIn({ onSignedIn, run }: { onSignedIn: (u: Schemas['User']) => void; run: Runner }) {
   const [step, setStep] = useState<'phone' | 'code'>('phone');
@@ -63,10 +63,3 @@ export function SignIn({ onSignedIn, run }: { onSignedIn: (u: Schemas['User']) =
     </View>
   );
 }
-
-/** Runs an API task with a busy flag, showing a network error message if the API cannot be reached. */
-export type Runner = (
-  setBusy: (b: boolean) => void,
-  setMessage: (m: string) => void,
-  task: () => Promise<unknown>,
-) => Promise<void>;
