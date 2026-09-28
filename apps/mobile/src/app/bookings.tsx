@@ -62,6 +62,18 @@ export default function Bookings() {
                 We are holding this slot until {formatTime(b.holdExpiresAt, tz)}. Pay the advance before then to keep it.
               </Text>
             )}
+            {['held', 'pending_payment', 'confirmed'].includes(b.status) && (
+              <TextButton
+                title="Message the venue"
+                onPress={async () => {
+                  const { data } = await api.POST('/conversations/booking/{bookingId}', {
+                    params: { path: { bookingId: b.id } },
+                    headers: await authHeaders(),
+                  });
+                  if (data) router.push(`/chats/${data.id}`);
+                }}
+              />
+            )}
             {(b.status === 'held' || b.status === 'pending_payment') && (
               <TextButton
                 title={b.status === 'held' ? 'Pay advance' : 'Payment details'}

@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation';
 import { UnlistedWarning } from '@/components/unlisted-warning';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
+import { openMatchChat } from '../../chats/actions';
 import { cancelMatch, decideRequest, joinMatch, leaveMatch, payShare, removePlayer } from '../actions';
 
 export const metadata: Metadata = { title: 'Match · SportsLink' };
@@ -67,6 +68,9 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
         <p className="text-xs">Joining closes {formatDay(m.joinCutoffAt, tz)}, {formatTime(m.joinCutoffAt, tz)}.</p>
       </div>
       {typeof done === 'string' && doneText[done] && <p className="rounded-md border p-3 text-sm">{doneText[done]}</p>}
+      {(m.isHost || (m.me && ['approved', 'confirmed'].includes(m.me.status))) && (
+        <ActionForm action={openMatchChat.bind(null, m.id)} button="Open the match chat" className="flex" />
+      )}
 
       {m.canJoin && (
         <ActionForm action={joinMatch.bind(null, m.id)} button="Ask to join">

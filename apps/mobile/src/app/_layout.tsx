@@ -12,6 +12,8 @@ export default function Layout() {
         <Stack.Screen name="matches/index" options={{ title: 'Matches' }} />
         <Stack.Screen name="matches/new" options={{ title: 'Create a match' }} />
         <Stack.Screen name="matches/[id]" options={{ title: 'Match' }} />
+        <Stack.Screen name="chats/index" options={{ title: 'Chats' }} />
+        <Stack.Screen name="chats/[id]" options={{ title: 'Chat' }} />
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
         <Stack.Screen name="vendor/index" options={{ title: 'Vendor' }} />
         <Stack.Screen name="vendor/payments" options={{ title: 'Payments to check' }} />

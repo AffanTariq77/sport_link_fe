@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
+import { ActionForm } from '@sportslink/ui';
+import { openBookingChat } from '../chats/actions';
 
 export const metadata: Metadata = { title: 'My bookings · SportsLink' };
 
@@ -44,6 +46,9 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
                 We are holding this slot until {formatTime(b.holdExpiresAt, b.venue.timezone)}. Pay the advance before
                 then to keep it.
               </p>
+            )}
+            {['held', 'pending_payment', 'confirmed'].includes(b.status) && (
+              <ActionForm action={openBookingChat.bind(null, b.id)} button="Message the venue" className="mt-2 flex" />
             )}
             {(b.status === 'held' || b.status === 'pending_payment') && (
               <Link href={`/bookings/${b.id}/pay`} className="mt-2 inline-block text-sm font-medium underline">

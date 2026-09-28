@@ -1,5 +1,5 @@
 import { formatDay, formatMoney, formatTime, paymentMethodName, type Schemas } from '@sportslink/api-client';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { myStatusText, playerStatusText, UNLISTED_WARNING } from '../../matchText';
@@ -77,6 +77,20 @@ export default function MatchScreen() {
       <Message>{message}</Message>
 
       {m.canJoin && <Button title="Ask to join" onPress={join} busy={busy} />}
+      {(m.isHost || (m.me && ['approved', 'confirmed'].includes(m.me.status))) && (
+        <TextButton
+          title="Open the match chat"
+          onPress={() =>
+            run(setBusy, setMessage, async () => {
+              const { data } = await api.POST('/conversations/match/{matchId}', {
+                params: { path: { matchId: id } },
+                headers: await authHeaders(),
+              });
+              if (data) router.push(`/chats/${data.id}`);
+            })
+          }
+        />
+      )}
       {m.me && <Text style={ui.label}>{myStatusText[m.me.status] ?? m.me.status}</Text>}
 
       {pay && m.me?.status === 'approved' && pay.shareStatus !== 'submitted' && (

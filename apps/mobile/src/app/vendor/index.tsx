@@ -78,6 +78,7 @@ export default function Vendor() {
           <Message>{message}</Message>
           <TextButton title="Calendar" onPress={() => router.push('/vendor/calendar')} />
           <TextButton title="Payments to check" onPress={() => router.push('/vendor/payments')} />
+          <TextButton title="Messages from players" onPress={() => router.push('/chats')} />
           <Text style={ui.label}>Venues</Text>
           {setup.branches.length === 0 && <Text>No venues yet.</Text>}
           {setup.branches.map((b) => (

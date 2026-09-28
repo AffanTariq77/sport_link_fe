@@ -23,6 +23,7 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 - Vendor onboarding: web `vendor/` (apply, venues, payment accounts) and `vendor/branches/[id]` (details, policy, courts, hours, prices, checklist, send for review) using `components/action-form.tsx`; mobile `src/app/vendor/index.tsx` (apply and setup status; editing is on the web for now). `toMinor`/`fromMinor` convert typed rupees for the API.
 - Vendor calendar and staff: web `vendor/calendar` (day view per court, walk-ins, blocks, no-shows) and a staff section on `vendor/`; mobile `src/app/vendor/calendar.tsx` (day view, walk-ins and blocks).
 - Matches: web `matches/` (list, `new`, `[id]` with join, host approvals, pay share), mobile `src/app/matches/`. The unlisted venue warning (`components/unlisted-warning.tsx` on web, an alert on mobile) is shown every time before creating or joining.
+- Chat: web `chats/` (thread polls through the `chats/[id]/poll` route because the browser has no API token; phone warning with Send anyway; report and block), mobile `src/app/chats/` (polling, alert for the phone warning, long-press a message to block). Entry points on matches, bookings and vendor pages.
 - Admin panel (`apps/admin`): sign-in with two-factor code, admin token in an httpOnly `sla_admin` cookie, route group `(panel)` with navigation filtered by permissions: overview, identity checks (images streamed through `documents/[id]/[side]`, never public or cached), venues (visits, billing, status), payment accounts, users and bans, reports, audit log.
 - `packages/ui`: shared web components (`ActionForm`, `keepValues`); both Next apps `@source` it for Tailwind. Forms submit through `keepValues` so React 19 does not clear fields when an action returns an error.
 - Shared display helpers (`formatMoney` with ISO minor units, venue-time `formatTime` and `formatDay`, `describePolicy`, `paymentMethodName`, `bookingStatusText`) live in `packages/api-client/src/format.ts`. Local API address: `API_URL` in `apps/web/.env.local`, `EXPO_PUBLIC_API_PORT` in `apps/mobile/.env.local`.
@@ -62,5 +63,5 @@ Do not invent a brand. When it is ready, put the tokens in one place per app and
 4. Venue search, venue page, booking with split payment and payment confirmation status
 5. Vendor mode: venue photos (onboarding, courts, pricing, calendar, manual bookings, blocks, payment queue and staff are done)
 6. Match results (create, join, host approval and shares are done)
-7. Chat
+7. Chat: realtime and media (text chat with the phone warning is done)
 8. Admin: invoices (venue and payment account approvals, site visits, bans, commission, reports and audit log are done)

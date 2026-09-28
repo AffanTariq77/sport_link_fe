@@ -33,6 +33,9 @@ export default async function Home() {
             <Link href="/bookings" className="px-4 py-2 underline">
               My bookings
             </Link>
+            <Link href="/chats" className="px-4 py-2 underline">
+              Chats
+            </Link>
           </div>
           <Link href="/vendor" className="text-sm underline">
             {vendor ? 'Vendor: your venues and payments' : 'List your venue'}

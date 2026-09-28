@@ -94,6 +94,9 @@ export default async function VendorPage() {
         <Link href="/vendor/payments" className="underline">
           Payments to check
         </Link>
+        <Link href="/chats" className="underline">
+          Messages from players
+        </Link>
       </div>
 
       <section className="flex flex-col gap-3">
