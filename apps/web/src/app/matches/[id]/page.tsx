@@ -7,7 +7,7 @@ import { UnlistedWarning } from '@/components/unlisted-warning';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
 import { openMatchChat } from '../../chats/actions';
-import { cancelMatch, decideRequest, joinMatch, leaveMatch, payShare, removePlayer } from '../actions';
+import { acceptChallenge, cancelMatch, decideRequest, joinMatch, leaveMatch, payShare, removePlayer } from '../actions';
 import { ResultSection } from './result';
 
 export const metadata: Metadata = { title: 'Match · SportsLink' };
@@ -37,6 +37,7 @@ const doneText: Record<string, string> = {
   confirmed: 'Result confirmed. Ratings are updated.',
   disputed: 'Dispute sent. SportsLink will review it.',
   reviewed: 'Review sent. Thank you.',
+  challenge: 'Challenge accepted. Your players can now join.',
 };
 
 export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
@@ -55,6 +56,18 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
   const open = m.status === 'open' || m.status === 'full';
   const playing = m.isHost || m.me?.status === 'confirmed';
   const result = playing ? (await api.GET('/matches/{id}/result', { params: { path: { id } }, headers })).data : undefined;
+  // Teams the user leads that can take up this challenge.
+  const challengers =
+    m.teams && !m.teams.away && open
+      ? ((await api.GET('/teams/mine', { headers })).data ?? []).filter(
+          (t) =>
+            t.status === 'active' &&
+            t.role !== 'member' &&
+            t.sport === m.sport &&
+            t.id !== m.teams!.home?.id &&
+            (!m.teams!.challenged || m.teams!.challenged.id === t.id),
+        )
+      : [];
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-6">
@@ -78,7 +91,32 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
           {m.pricePerPlayer !== null && m.currency && ` · ${formatMoney(m.pricePerPlayer, m.currency)} per player`}
         </p>
         <p className="text-xs">Joining closes {formatDay(m.joinCutoffAt, tz)}, {formatTime(m.joinCutoffAt, tz)}.</p>
+        {m.teams && (
+          <p className="mt-2 text-sm font-medium">
+            Team match: {m.teams.home && <Link href={`/teams/${m.teams.home.id}`} className="underline">{m.teams.home.name}</Link>} v{' '}
+            {m.teams.away ? (
+              <Link href={`/teams/${m.teams.away.id}`} className="underline">
+                {m.teams.away.name}
+              </Link>
+            ) : m.teams.challenged ? (
+              `${m.teams.challenged.name} (not accepted yet)`
+            ) : (
+              'any team (open challenge)'
+            )}
+          </p>
+        )}
       </div>
+      {challengers.length > 0 && (
+        <ActionForm action={acceptChallenge.bind(null, m.id)} button="Accept the challenge" className="flex flex-wrap items-center gap-3">
+          <select name="teamId" aria-label="Your team" className={input}>
+            {challengers.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </ActionForm>
+      )}
       {typeof done === 'string' && doneText[done] && <p className="rounded-md border p-3 text-sm">{doneText[done]}</p>}
       {(m.isHost || (m.me && ['approved', 'confirmed'].includes(m.me.status))) && (
         <ActionForm action={openMatchChat.bind(null, m.id)} button="Open the match chat" className="flex" />

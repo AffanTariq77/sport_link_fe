@@ -30,6 +30,8 @@ export async function createMatch(_: FormState, form: FormData): Promise<FormSta
             }
           : undefined,
       acceptedUnlistedWarning: form.get('acceptedUnlistedWarning') === 'on',
+      teamId: text(form, 'teamId') || undefined,
+      opponentTeamId: text(form, 'opponentTeamId') || undefined,
       slotsTotal: Number(text(form, 'slotsTotal')),
       hostBrings: Number(text(form, 'hostBrings')),
       filters: {
@@ -139,4 +141,14 @@ export async function reviewPlayer(id: string, toUserId: string, _: FormState, f
   });
   if (error) return fail(error);
   redirect(`/matches/${id}?done=reviewed`);
+}
+
+export async function acceptChallenge(id: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/matches/{id}/challenge', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: { teamId: text(form, 'teamId') },
+  });
+  if (error) return fail(error);
+  redirect(`/matches/${id}?done=challenge`);
 }

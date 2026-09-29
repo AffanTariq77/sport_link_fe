@@ -18,6 +18,7 @@ export default function MatchScreen() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [me, setMe] = useState<string | null>(null);
+  const [myTeams, setMyTeams] = useState<Schemas['MyTeam'][]>([]);
 
   const load = useCallback(
     () =>
@@ -26,6 +27,7 @@ export default function MatchScreen() {
         const { data, error } = await api.GET('/matches/{id}', { params: { path: { id } }, headers });
         if (!data) return setMessage(error?.message ?? failed);
         setMatch(data);
+        if (data.teams && !data.teams.away) setMyTeams((await api.GET('/teams/mine', { headers })).data ?? []);
         if (data.listed && data.me && ['approved', 'confirmed'].includes(data.me.status)) {
           const p = (await api.GET('/matches/{id}/pay', { params: { path: { id } }, headers })).data ?? null;
           setPay(p);
@@ -81,7 +83,33 @@ export default function MatchScreen() {
         {m.slotsFilled} of {m.slotsTotal} players · host {m.host.name ?? 'Player'} · {m.status}
         {m.pricePerPlayer !== null && m.currency ? ` · ${formatMoney(m.pricePerPlayer, m.currency)} per player` : ''}
       </Text>
+      {m.teams && (
+        <Text style={ui.label}>
+          Team match: {m.teams.home?.name} v{' '}
+          {m.teams.away?.name ?? (m.teams.challenged ? `${m.teams.challenged.name} (not accepted yet)` : 'any team (open challenge)')}
+        </Text>
+      )}
       <Message>{message}</Message>
+      {open &&
+        m.teams &&
+        !m.teams.away &&
+        myTeams
+          .filter(
+            (t) =>
+              t.status === 'active' &&
+              t.role !== 'member' &&
+              t.sport === m.sport &&
+              t.id !== m.teams!.home?.id &&
+              (!m.teams!.challenged || m.teams!.challenged.id === t.id),
+          )
+          .map((t) => (
+            <Button
+              key={t.id}
+              title={`Accept the challenge as ${t.name}`}
+              busy={busy}
+              onPress={() => act(async () => api.POST('/matches/{id}/challenge', { ...path, headers: await authHeaders(), body: { teamId: t.id } }))}
+            />
+          ))}
 
       {m.canJoin && <Button title="Ask to join" onPress={join} busy={busy} />}
       {(m.isHost || (m.me && ['approved', 'confirmed'].includes(m.me.status))) && (

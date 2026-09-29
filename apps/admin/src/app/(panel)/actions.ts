@@ -127,3 +127,13 @@ export async function decideResult(id: string, _: FormState, form: FormData): Pr
   if (error) return fail(error);
   redirect('/results?done=1');
 }
+
+export async function assignCaptain(teamId: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/admin/teams/{id}/captain', {
+    params: { path: { id: teamId } },
+    headers: await adminHeaders(),
+    body: { userId: text(form, 'userId') },
+  });
+  if (error) return fail(error);
+  redirect('/reports?done=1');
+}

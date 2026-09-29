@@ -5,19 +5,36 @@ import { useState } from 'react';
 import { UnlistedWarning } from '@/components/unlisted-warning';
 import { createMatch } from '../actions';
 
+type TeamOption = { id: string; name: string; sport: string; city?: string | null };
+
 export function MatchForm({
   sports,
   bookings,
+  teams = [],
+  opponents = [],
+  team,
 }: {
   sports: { slug: string; name: string }[];
   bookings: { id: string; label: string }[];
+  teams?: TeamOption[];
+  opponents?: TeamOption[];
+  team?: string;
 }) {
   const [where, setWhere] = useState(bookings.length ? 'booking' : 'unlisted');
+  const [teamId, setTeamId] = useState(teams.some((t) => t.id === team) ? team! : '');
+  const myTeam = teams.find((t) => t.id === teamId);
+  const [sport, setSport] = useState(sports.find((s) => s.name === myTeam?.sport)?.slug ?? sports[0]?.slug ?? '');
+  const chooseTeam = (id: string) => {
+    setTeamId(id);
+    const t = teams.find((x) => x.id === id);
+    const slug = sports.find((s) => s.name === t?.sport)?.slug;
+    if (slug) setSport(slug);
+  };
   return (
     <ActionForm action={createMatch} button="Create match">
       <label className={labelClass}>
         Sport
-        <select name="sport" required className={input}>
+        <select name="sport" required value={sport} onChange={(e) => setSport(e.target.value)} disabled={!!myTeam} className={input}>
           {sports.map((s) => (
             <option key={s.slug} value={s.slug}>
               {s.name}
@@ -25,6 +42,38 @@ export function MatchForm({
           ))}
         </select>
       </label>
+      {myTeam && <input type="hidden" name="sport" value={sport} />}
+      {teams.length > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className={labelClass}>
+            Team match
+            <select name="teamId" value={teamId} onChange={(e) => chooseTeam(e.target.value)} className={input}>
+              <option value="">No, a normal match</option>
+              {teams.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name} ({t.sport})
+                </option>
+              ))}
+            </select>
+          </label>
+          {myTeam && (
+            <label className={labelClass}>
+              Opponent
+              <select name="opponentTeamId" defaultValue="" className={input}>
+                <option value="">Any team can accept</option>
+                {opponents
+                  .filter((o) => o.sport === myTeam.sport && o.id !== myTeam.id)
+                  .map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name}
+                      {o.city ? `, ${o.city}` : ''}
+                    </option>
+                  ))}
+              </select>
+            </label>
+          )}
+        </div>
+      )}
       <fieldset className="flex flex-col gap-2 text-sm">
         <legend className="font-medium">Where</legend>
         <label className="flex items-center gap-2">
