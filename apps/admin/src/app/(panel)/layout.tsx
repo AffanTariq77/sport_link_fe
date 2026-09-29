@@ -12,6 +12,7 @@ const NAV = [
   ['/users', 'Users and bans', 'users.ban'],
   ['/reports', 'Reports and disputes', 'reports.review'],
   ['/results', 'Disputed results', 'disputes.resolve'],
+  ['/tournaments', 'Tournaments', 'tournaments.manage'],
   ['/audit', 'Audit log', 'audit.view'],
 ] as const;
 

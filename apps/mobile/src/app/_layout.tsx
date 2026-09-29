@@ -19,6 +19,8 @@ export default function Layout() {
         <Stack.Screen name="leaderboards" options={{ title: 'Rankings' }} />
         <Stack.Screen name="find-players/index" options={{ title: 'Find Players' }} />
         <Stack.Screen name="find-players/[id]" options={{ title: 'Find Players' }} />
+        <Stack.Screen name="tournaments/index" options={{ title: 'Tournaments' }} />
+        <Stack.Screen name="tournaments/[id]" options={{ title: 'Tournament' }} />
         <Stack.Screen name="teams/index" options={{ title: 'Teams' }} />
         <Stack.Screen name="teams/[id]" options={{ title: 'Team' }} />
         <Stack.Screen name="players/[id]" options={{ title: 'Player' }} />
