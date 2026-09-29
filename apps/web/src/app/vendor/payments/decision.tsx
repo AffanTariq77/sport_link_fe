@@ -1,13 +1,10 @@
-"use client";
+'use client';
 
-import { useActionState } from "react";
-import { type DecisionState, decidePayment } from "../actions";
+import { useActionState } from 'react';
+import { type DecisionState, decidePayment } from '../actions';
 
 export function Decision({ id }: { id: string }) {
-  const [state, action, pending] = useActionState<DecisionState, FormData>(
-    decidePayment,
-    {},
-  );
+  const [state, action, pending] = useActionState<DecisionState, FormData>(decidePayment, {});
   return (
     <form action={action} className="mt-3 flex flex-col gap-2">
       <input type="hidden" name="id" value={id} />
@@ -21,21 +18,14 @@ export function Decision({ id }: { id: string }) {
           Money received
         </button>
         <details className="text-sm">
-          <summary className="cursor-pointer rounded-md border px-3 py-2">
-            Not received
-          </summary>
+          <summary className="cursor-pointer rounded-md border px-3 py-2">Not received</summary>
           <div className="mt-2 flex flex-col gap-2">
             <input
               name="reason"
               placeholder="What was wrong, for example no payment with this ID"
               className="rounded-md border px-3 py-2"
             />
-            <button
-              name="decision"
-              value="reject"
-              disabled={pending}
-              className="rounded-md border px-3 py-2"
-            >
+            <button name="decision" value="reject" disabled={pending} className="rounded-md border px-3 py-2">
               Reject payment
             </button>
           </div>

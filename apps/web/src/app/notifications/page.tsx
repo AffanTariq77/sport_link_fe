@@ -1,61 +1,42 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { api } from "@/lib/api";
-import { authHeaders, currentUser } from "@/lib/session";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { api } from '@/lib/api';
+import { authHeaders, currentUser } from '@/lib/session';
 
-export const metadata: Metadata = { title: "Notifications · SportsLink" };
+export const metadata: Metadata = { title: 'Notifications · SportsLink' };
 
 // ponytail: launch-market time zone, as in chats; use the user's country time zone when a second market opens.
 const when = (d: string) =>
-  new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Karachi",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(d));
+  new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Karachi', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(d));
 
 export default async function NotificationsPage() {
-  if (!(await currentUser())) redirect("/sign-in");
+  if (!(await currentUser())) redirect('/sign-in');
   const headers = await authHeaders();
-  const { data, error } = await api.GET("/notifications", { headers });
+  const { data, error } = await api.GET('/notifications', { headers });
   // Opening the list counts as reading it; unread ones stay highlighted on this visit.
-  if (data?.unread)
-    await api.POST("/notifications/read", { headers, body: {} });
+  if (data?.unread) await api.POST('/notifications/read', { headers, body: {} });
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 p-6">
       <h1 className="text-2xl font-semibold">Notifications</h1>
-      {error && (
-        <p role="alert">Could not load notifications. Please try again.</p>
-      )}
-      {data?.items.length === 0 && (
-        <p>
-          Nothing yet. Booking, payment, match and chat updates will appear
-          here.
-        </p>
-      )}
+      {error && <p role="alert">Could not load notifications. Please try again.</p>}
+      {data?.items.length === 0 && <p>Nothing yet. Booking, payment, match and chat updates will appear here.</p>}
       <ul className="flex flex-col gap-2">
         {data?.items.map((n) => {
           const body = (
             <>
               <span className="flex justify-between gap-3">
                 <span className="font-medium">{n.title}</span>
-                <span className="shrink-0 text-xs text-neutral-500">
-                  {when(n.createdAt)}
-                </span>
+                <span className="shrink-0 text-xs text-neutral-500">{when(n.createdAt)}</span>
               </span>
               <span className="block">{n.body}</span>
             </>
           );
-          const cls = `block rounded-lg border p-3 text-sm ${n.readAt ? "" : "border-neutral-900 dark:border-white"}`;
+          const cls = `block rounded-lg border p-3 text-sm ${n.readAt ? '' : 'border-neutral-900 dark:border-white'}`;
           return (
             <li key={n.id}>
               {n.link ? (
-                <Link
-                  href={n.link}
-                  className={`${cls} hover:bg-neutral-50 dark:hover:bg-neutral-900`}
-                >
+                <Link href={n.link} className={`${cls} hover:bg-neutral-50 dark:hover:bg-neutral-900`}>
                   {body}
                 </Link>
               ) : (
