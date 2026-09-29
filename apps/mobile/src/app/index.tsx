@@ -8,7 +8,7 @@ import { SignIn } from '../screens/SignIn';
 import { Verify } from '../screens/Verify';
 import { registerDevice } from '../push';
 import { api, authHeaders, currentUser, signOut } from '../session';
-import { Button, Message, offline, run, styles as ui, TextButton } from '../ui';
+import { Button, colors, Message, offline, run, styles as ui, TextButton, Tile } from '../ui';
 
 // Onboarding goes sign in → profile → ID (when the verification.required_at setting asks for it at sign-up).
 export default function Home() {
@@ -65,17 +65,16 @@ export default function Home() {
           </>
         )}
         <Wards />
-        <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
-        <TextButton title="Chats" onPress={() => router.push('/chats')} />
-        <TextButton title="Teams" onPress={() => router.push('/teams')} />
-        <TextButton title="Tournaments" onPress={() => router.push('/tournaments')} />
-        <TextButton title="Rankings" onPress={() => router.push('/leaderboards')} />
-        <TextButton
-          title={unread ? `Notifications (${unread})` : 'Notifications'}
-          onPress={() => (setUnread(0), router.push('/notifications'))}
-        />
-        <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
-        <TextButton title="Your account" onPress={() => router.push('/account')} />
+        <View style={ui.row}>
+          <Tile title="My bookings" onPress={() => router.push('/bookings')} />
+          <Tile title="Chats" onPress={() => router.push('/chats')} />
+          <Tile title="Teams" onPress={() => router.push('/teams')} />
+          <Tile title="Tournaments" onPress={() => router.push('/tournaments')} />
+          <Tile title="Rankings" onPress={() => router.push('/leaderboards')} />
+          <Tile title="Notifications" badge={unread} onPress={() => (setUnread(0), router.push('/notifications'))} />
+          <Tile title={isVendor ? 'Your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
+          <Tile title="Your account" onPress={() => router.push('/account')} />
+        </View>
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
     );
@@ -93,5 +92,5 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24 },
-  title: { fontSize: 28, fontWeight: '600' },
+  title: { fontSize: 30, fontWeight: '700', color: colors.accent },
 });

@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
 import { API_URL } from './session';
 
-// Placeholder styling until the SportsLink brand is chosen.
+// Placeholder styling until the SportsLink brand is chosen: swap the accent here.
+export const colors = { accent: '#059669', text: '#171717', muted: '#52525b', line: '#e4e4e7', surface: '#f4f4f5' };
 
 export const failed = 'Something went wrong. Please try again.';
 export const offline = `Cannot reach SportsLink. Check your connection and that the API is running at ${API_URL}.`;
@@ -59,6 +60,16 @@ export function TextButton({ title, onPress, busy }: { title: string; onPress: (
   );
 }
 
+/** Large tappable tile for the home screen menu. */
+export function Tile({ title, onPress, badge }: { title: string; onPress: () => void; badge?: number }) {
+  return (
+    <Pressable style={({ pressed }) => [styles.tile, pressed && styles.pressed]} onPress={onPress} accessibilityRole="button">
+      <Text style={styles.tileText}>{title}</Text>
+      {!!badge && <Text style={styles.badge}>{badge > 99 ? '99+' : badge}</Text>}
+    </Pressable>
+  );
+}
+
 export function Message({ children }: { children?: ReactNode }) {
   return (
     <Text style={styles.message} accessibilityLiveRegion="polite">
@@ -73,15 +84,19 @@ export const styles = StyleSheet.create({
   body: { fontSize: 14, textAlign: 'center' },
   field: { gap: 4 },
   label: { fontSize: 14, fontWeight: '500' },
-  input: { borderWidth: 1, borderColor: '#999', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16 },
+  input: { borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16 },
   message: { minHeight: 20, fontSize: 14 },
-  button: { backgroundColor: '#171717', borderRadius: 6, paddingVertical: 12, alignItems: 'center' },
+  button: { backgroundColor: colors.accent, borderRadius: 10, paddingVertical: 14, alignItems: 'center' },
   disabled: { opacity: 0.5 },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: '500' },
-  link: { fontSize: 14, textDecorationLine: 'underline', paddingVertical: 8, textAlign: 'center' },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  link: { fontSize: 14, color: colors.accent, fontWeight: '500', paddingVertical: 8, textAlign: 'center' },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { borderWidth: 1, borderColor: '#999', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6 },
-  chipOn: { backgroundColor: '#171717', borderColor: '#171717' },
+  chip: { borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6 },
+  chipOn: { backgroundColor: colors.accent, borderColor: colors.accent },
+  tile: { flexBasis: '47%', flexGrow: 1, minHeight: 72, justifyContent: 'center', borderRadius: 12, padding: 14, backgroundColor: colors.surface },
+  tileText: { fontSize: 15, fontWeight: '600', color: colors.text },
+  pressed: { opacity: 0.7 },
+  badge: { position: 'absolute', top: 8, right: 8, minWidth: 22, borderRadius: 11, paddingHorizontal: 6, backgroundColor: colors.accent, color: '#fff', fontSize: 12, fontWeight: '600', textAlign: 'center', overflow: 'hidden' },
   chipText: { fontSize: 14 },
   chipTextOn: { color: '#fff' },
 });
