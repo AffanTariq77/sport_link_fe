@@ -28,6 +28,12 @@
       "expo-secure-store",
       "expo-notifications",
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "SportsLink uses your location to find players near you. Only a rounded area is stored."
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "SportsLink uses your photos to verify your identity.",

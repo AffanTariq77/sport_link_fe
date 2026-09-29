@@ -5,6 +5,7 @@ import { authHeaders, currentUser } from '@/lib/session';
 const LINKS = [
   ['/venues', 'Venues'],
   ['/matches', 'Matches'],
+  ['/find-players', 'Find Players'],
   ['/bookings', 'Bookings'],
   ['/chats', 'Chats'],
   ['/teams', 'Teams'],

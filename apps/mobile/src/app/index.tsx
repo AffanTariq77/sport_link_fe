@@ -61,6 +61,7 @@ export default function Home() {
           <>
             <Button title="Book a venue" onPress={() => router.push('/venues')} />
             <Button title="Find or create a match" onPress={() => router.push('/matches')} />
+            <Button title="Find Players nearby" onPress={() => router.push('/find-players')} />
           </>
         )}
         <Wards />
