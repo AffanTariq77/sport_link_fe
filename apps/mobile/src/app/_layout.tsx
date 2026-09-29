@@ -15,6 +15,7 @@ export default function Layout() {
         <Stack.Screen name="chats/index" options={{ title: 'Chats' }} />
         <Stack.Screen name="chats/[id]" options={{ title: 'Chat' }} />
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
+        <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
         <Stack.Screen name="vendor/index" options={{ title: 'Vendor' }} />
         <Stack.Screen name="vendor/payments" options={{ title: 'Payments to check' }} />
         <Stack.Screen name="vendor/calendar" options={{ title: 'Calendar' }} />

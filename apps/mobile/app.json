@@ -26,6 +26,7 @@
     "scheme": "sportslink",
     "plugins": [
       "expo-secure-store",
+      "expo-notifications",
       [
         "expo-image-picker",
         {

@@ -6,6 +6,7 @@ import { GuardianStep, Wards } from '../screens/Family';
 import { Profile } from '../screens/Profile';
 import { SignIn } from '../screens/SignIn';
 import { Verify } from '../screens/Verify';
+import { registerDevice } from '../push';
 import { api, authHeaders, currentUser, signOut } from '../session';
 import { Button, Message, offline, run, styles as ui, TextButton } from '../ui';
 
@@ -18,12 +19,15 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [verifyNow, setVerifyNow] = useState(false); // user chose to verify before it is required
   const [isVendor, setIsVendor] = useState(false);
+  const [unread, setUnread] = useState(0);
 
   async function load(u: Schemas['User'] | null) {
     setUser(u);
     const headers = await authHeaders();
     setVerification(u ? ((await api.GET('/me/verification', { headers })).data ?? null) : null);
     setIsVendor(!!u && !!(await api.GET('/vendor/setup', { headers })).data?.vendor);
+    setUnread(u ? ((await api.GET('/notifications', { headers })).data?.unread ?? 0) : 0);
+    if (u?.name) registerDevice().catch(() => undefined); // never blocks the home screen
   }
 
   useEffect(() => {
@@ -62,6 +66,10 @@ export default function Home() {
         <Wards />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
         <TextButton title="Chats" onPress={() => router.push('/chats')} />
+        <TextButton
+          title={unread ? `Notifications (${unread})` : 'Notifications'}
+          onPress={() => (setUnread(0), router.push('/notifications'))}
+        />
         <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
