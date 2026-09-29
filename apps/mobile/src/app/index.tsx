@@ -75,6 +75,7 @@ export default function Home() {
           onPress={() => (setUnread(0), router.push('/notifications'))}
         />
         <TextButton title={isVendor ? 'Vendor: your venues' : 'List your venue'} onPress={() => router.push('/vendor')} />
+        <TextButton title="Your account" onPress={() => router.push('/account')} />
         <TextButton title="Sign out" onPress={leave} busy={busy} />
       </View>
     );

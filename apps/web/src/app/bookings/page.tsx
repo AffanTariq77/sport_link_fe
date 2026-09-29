@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
 import { ActionForm, input } from '@sportslink/ui';
 import { openBookingChat } from '../chats/actions';
-import { answerRefund, cancelBooking, reviewVenue } from './actions';
+import { answerRefund, cancelBooking, extendBooking, reviewVenue } from './actions';
 
 export const metadata: Metadata = { title: 'My bookings · SportsLink' };
 
@@ -94,10 +94,19 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
                   )}
                 </div>
               ))}
+            {(b.seriesId || b.extendsBookingId) && (
+              <p className="mt-1 text-xs">{b.seriesId ? 'Weekly booking' : 'Extension of your earlier slot'}</p>
+            )}
             {(b.status === 'held' || b.status === 'pending_payment') && (
-              <Link href={`/bookings/${b.id}/pay`} className="mt-2 inline-block text-sm font-medium underline">
-                {b.status === 'held' ? 'Pay advance' : 'Payment details'}
+              <Link
+                href={b.seriesId && b.status === 'held' ? `/bookings/series/${b.seriesId}/pay` : `/bookings/${b.id}/pay`}
+                className="mt-2 inline-block text-sm font-medium underline"
+              >
+                {b.status === 'held' ? (b.seriesId ? 'Pay for every week' : 'Pay advance') : 'Payment details'}
               </Link>
+            )}
+            {['held', 'pending_payment', 'confirmed'].includes(b.status) && new Date(b.endAt) > new Date() && !b.seriesId && (
+              <ActionForm action={extendBooking.bind(null, b.id)} button="Extend by one slot" className="mt-2 flex" />
             )}
             {(b.status === 'completed' || (b.status === 'confirmed' && new Date(b.endAt) < new Date())) && (
               <details className="mt-2 text-sm">

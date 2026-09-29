@@ -117,6 +117,32 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
           ))}
         </form>
       )}
+      {user && venue.policy.recurringAllowed && court && day && day.slots.some((s) => s.available) && (
+        <details className="rounded-lg border p-4 text-sm">
+          <summary className="cursor-pointer font-semibold">Book the same slot every week</summary>
+          <form action="/bookings/weekly" className="mt-2 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="court" value={court.id} />
+            <input type="hidden" name="venue" value={venue.id} />
+            <label className="flex flex-col gap-1">
+              Slot
+              <select name="slot" className="rounded-md border px-3 py-2">
+                {day.slots
+                  .filter((s) => s.available)
+                  .map((s) => (
+                    <option key={s.startAt} value={`${s.startAt}|${s.endAt}`}>
+                      {formatDay(s.startAt, venue.timezone)} {formatTime(s.startAt, venue.timezone)} to {formatTime(s.endAt, venue.timezone)}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1">
+              Weeks
+              <input name="weeks" type="number" min={2} max={12} defaultValue={4} className="w-20 rounded-md border px-3 py-2" />
+            </label>
+            <button className="rounded-md border px-4 py-2 font-medium">Check the weeks</button>
+          </form>
+        </details>
+      )}
       {!user && (
         <p className="text-sm">
           <Link href="/sign-in" className="underline">

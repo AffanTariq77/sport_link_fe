@@ -10,8 +10,17 @@ const input = 'w-full rounded-md border border-neutral-400 px-3 py-2 text-base b
 const button =
   'w-full rounded-md bg-neutral-900 px-3 py-2 font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900';
 
-export function PayForm({ bookingId, info }: { bookingId: string; info: Schemas['PayInfo'] }) {
-  const [state, action, pending] = useActionState<PayState, FormData>(submitPayment.bind(null, bookingId), {});
+export function PayForm({
+  bookingId,
+  info,
+  submit,
+}: {
+  bookingId: string;
+  info: Schemas['PayInfo'];
+  /** Another payment action, for example every week of a weekly booking. */
+  submit?: (prev: PayState, form: FormData) => Promise<PayState>;
+}) {
+  const [state, action, pending] = useActionState<PayState, FormData>(submit ?? submitPayment.bind(null, bookingId), {});
   const [method, setMethod] = useState(info.accounts[0]?.method ?? (info.payAtVenueAllowed ? 'cash' : ''));
 
   return (

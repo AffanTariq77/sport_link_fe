@@ -33,8 +33,9 @@ export default async function VendorPaymentsPage() {
           return (
             <li key={q.id} className="rounded-lg border p-4 text-sm">
               <p className="font-semibold">
-                {formatMoney(q.advanceAmount, q.booking.currency)} by {paymentMethodName[q.method ?? ''] ?? q.method}
+                {formatMoney(q.series?.advanceTotal ?? q.advanceAmount, q.booking.currency)} by {paymentMethodName[q.method ?? ''] ?? q.method}
               </p>
+              {q.series && <p className="font-medium">Weekly booking: one payment for {q.series.weeks} weeks, starting with this slot.</p>}
               <p>
                 Transaction ID <span className="font-mono">{q.txnReference}</span>
               </p>

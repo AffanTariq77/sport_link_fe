@@ -84,6 +84,23 @@ export default function Bookings() {
                 }}
               />
             )}
+            {(b.seriesId || b.extendsBookingId) && <Text>{b.seriesId ? 'Weekly booking' : 'Extension of your earlier slot'}</Text>}
+            {['held', 'pending_payment', 'confirmed'].includes(b.status) && new Date(b.endAt) > new Date() && !b.seriesId && (
+              <TextButton
+                title="Extend by one slot"
+                onPress={() =>
+                  void run(setBusy, setMessage, async () => {
+                    const { data, error } = await api.POST('/bookings/{id}/extend', {
+                      params: { path: { id: b.id } },
+                      headers: await authHeaders(),
+                      body: {},
+                    });
+                    if (!data) return setMessage(error?.message ?? 'The next slot is not free.');
+                    router.push(`/pay/${data.id}`);
+                  })
+                }
+              />
+            )}
             {['held', 'pending_payment', 'confirmed'].includes(b.status) && (
               <TextButton
                 title="Cancel booking"

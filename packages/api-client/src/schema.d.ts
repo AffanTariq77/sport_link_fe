@@ -292,6 +292,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/bookings/recurring/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_checkSeries"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/recurring": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_createSeries"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/{id}/extend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BookingsController_extend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/bookings/mine": {
         parameters: {
             query?: never;
@@ -318,6 +366,22 @@ export interface paths {
         get: operations["PaymentsController_payInfo"];
         put?: never;
         post: operations["PaymentsController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/series/{id}/payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_submitSeries"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1358,6 +1422,86 @@ export interface paths {
         get: operations["AnalyticsController_platform"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/phone/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/phone/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_confirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/phone/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_delete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/users/{id}/phone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_adminPhone"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2528,6 +2672,8 @@ export interface components {
             cancelRefund: boolean;
             cancelWindowHours: number;
             noShowRefund: boolean;
+            /** @description Weekly bookings allowed */
+            recurringAllowed: boolean;
         };
         CourtSlots: {
             currency: string;
@@ -2574,6 +2720,27 @@ export interface components {
                 noShowRefund: boolean;
             };
         };
+        RecurringRequest: {
+            /** Format: uuid */
+            courtId: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            weeks: number;
+            /** @description Start times of weeks to leave out */
+            skip?: string[];
+        };
+        RecurringWeeks: {
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            free: boolean;
+        }[];
+        ExtendBooking: {
+            minutes?: number;
+        };
         MyBooking: {
             /** Format: uuid */
             id: string;
@@ -2612,6 +2779,13 @@ export interface components {
                 city: string;
                 timezone: string;
             };
+            /**
+             * Format: uuid
+             * @description Weekly booking series
+             */
+            seriesId: string | null;
+            /** Format: uuid */
+            extendsBookingId: string | null;
         };
         PayInfo: {
             /** @enum {string} */
@@ -2650,6 +2824,12 @@ export interface components {
             status: "held" | "pending_payment" | "confirmed" | "completed" | "cancelled" | "no_show" | "expired";
             /** Format: date-time */
             paymentDeadlineAt: string | null;
+        };
+        SeriesPaymentResult: {
+            weeks: number;
+            advanceTotal: number;
+            /** @enum {string} */
+            status: "confirmed" | "pending_payment";
         };
         VendorAccess: {
             vendors: {
@@ -2695,6 +2875,11 @@ export interface components {
                 /** Format: date-time */
                 paymentDeadlineAt: string | null;
             };
+            /** @description Weekly booking: this payment covers every week */
+            series: {
+                weeks: number;
+                advanceTotal: number;
+            } | null;
         };
         PaymentHandled: {
             /** Format: uuid */
@@ -3483,6 +3668,29 @@ export interface components {
                 sport: string;
                 bookings: number;
             }[];
+        };
+        PhoneChangeStart: {
+            /** @example 0300 1234567 */
+            phone: string;
+        };
+        PhoneChangeConfirm: {
+            /** @example 0300 1234567 */
+            phone: string;
+            oldCode: string;
+            newCode: string;
+        };
+        PhoneChangeReview: {
+            /** @example 0300 1234567 */
+            phone: string;
+            reason: string;
+        };
+        DeleteAccount: {
+            /** @enum {boolean} */
+            confirm: true;
+        };
+        AdminPhoneChange: {
+            /** @example 0300 1234567 */
+            phone: string;
         };
         CalendarDay: {
             branch: {
@@ -4752,6 +4960,109 @@ export interface operations {
             };
         };
     };
+    BookingsController_checkSeries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecurringRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecurringWeeks"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    BookingsController_createSeries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecurringRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        seriesId: string;
+                        weeks: number;
+                        advanceTotal: number;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    BookingsController_extend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExtendBooking"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Hold"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     BookingsController_mine: {
         parameters: {
             query?: never;
@@ -4831,6 +5142,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    PaymentsController_submitSeries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentSubmission"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeriesPaymentResult"];
                 };
             };
             /** @description Error */
@@ -7137,6 +7482,178 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlatformAnalytics"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AccountController_start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhoneChangeStart"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AccountController_confirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhoneChangeConfirm"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AccountController_review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhoneChangeReview"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AccountController_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteAccount"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AccountController_adminPhone: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminPhoneChange"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
                 };
             };
             /** @description Error */

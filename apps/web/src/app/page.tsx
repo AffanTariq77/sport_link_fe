@@ -44,6 +44,9 @@ export default async function Home() {
           <Link href="/vendor" className="text-sm underline">
             {vendor ? 'Vendor: your venues and payments' : 'List your venue'}
           </Link>
+          <Link href="/account" className="text-sm underline">
+            Your account
+          </Link>
           <button className="text-sm underline">Sign out</button>
         </form>
         </div>

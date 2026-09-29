@@ -16,6 +16,7 @@ export default function Layout() {
         <Stack.Screen name="chats/[id]" options={{ title: 'Chat' }} />
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
         <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
+        <Stack.Screen name="account" options={{ title: 'Your account' }} />
         <Stack.Screen name="leaderboards" options={{ title: 'Rankings' }} />
         <Stack.Screen name="find-players/index" options={{ title: 'Find Players' }} />
         <Stack.Screen name="find-players/[id]" options={{ title: 'Find Players' }} />

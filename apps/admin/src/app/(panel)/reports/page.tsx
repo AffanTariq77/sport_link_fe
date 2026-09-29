@@ -9,6 +9,7 @@ const reasonText: Record<string, string> = {
   refund_dispute: 'Player says a refund did not arrive',
   result_dispute: 'Match result disputed (decide it under Disputed results)',
   team_without_captain: 'Team has no captain: assign one',
+  phone_change_review: 'Lost old number: check and change it under Users',
 };
 
 export default async function Reports(props: PageProps<'/reports'>) {

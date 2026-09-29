@@ -1,6 +1,6 @@
 import { ActionForm, input, labelClass } from '@sportslink/ui';
 import { adminHeaders, api } from '@/lib/api';
-import { moderateUser } from '../actions';
+import { changeUserPhone, moderateUser } from '../actions';
 
 export default async function Users(props: PageProps<'/users'>) {
   const params = await props.searchParams;
@@ -46,6 +46,12 @@ export default async function Users(props: PageProps<'/users'>) {
                   <input name="reason" required minLength={3} maxLength={500} className={input} />
                 </label>
               </ActionForm>
+              <details className="text-sm">
+                <summary className="cursor-pointer underline">Change phone number (after a lost-number review)</summary>
+                <ActionForm action={changeUserPhone.bind(null, u.id, q)} button="Change number" className="mt-2 flex flex-wrap items-center gap-2">
+                  <input name="phone" type="tel" required placeholder="0300 1234567" aria-label="New number" className={input} />
+                </ActionForm>
+              </details>
             </div>
           </details>
         </section>

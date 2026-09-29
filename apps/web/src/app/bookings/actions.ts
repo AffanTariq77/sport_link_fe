@@ -55,3 +55,33 @@ export async function reviewVenue(bookingId: string, _: PayState, form: FormData
   if (error) return { message: error.message ?? 'Something went wrong. Please try again.' };
   redirect('/bookings?reviewed=1');
 }
+
+/** Holds the weeks the player kept, then goes to paying them all at once. */
+export async function holdWeekly(courtId: string, startAt: string, endAt: string, weeks: string[], _: PayState, form: FormData): Promise<PayState> {
+  const keep = new Set(form.getAll('week').map(String));
+  if (!keep.size) return { message: 'Keep at least one week.' };
+  const { data, error } = await api.POST('/bookings/recurring', {
+    headers: await authHeaders(),
+    body: { courtId, startAt, endAt, weeks: weeks.length, skip: weeks.filter((w) => !keep.has(w)) },
+  });
+  if (!data) return { message: error?.message ?? 'Something went wrong. Please try again.' };
+  redirect(`/bookings/series/${data.seriesId}/pay`);
+}
+
+export async function submitSeriesPayment(seriesId: string, _: PayState, form: FormData): Promise<PayState> {
+  const method = String(form.get('method') ?? '') as 'jazzcash' | 'easypaisa' | 'bank_transfer' | 'cash';
+  const txnReference = method === 'cash' ? undefined : String(form.get('txnReference') ?? '');
+  const { data, error } = await api.POST('/bookings/series/{id}/payment', {
+    params: { path: { id: seriesId } },
+    headers: await authHeaders(),
+    body: { method, txnReference },
+  });
+  if (!data) return { message: error?.message ?? 'Something went wrong. Please try again.' };
+  redirect('/bookings?paid=weekly');
+}
+
+export async function extendBooking(id: string): Promise<PayState> {
+  const { data, error } = await api.POST('/bookings/{id}/extend', { params: { path: { id } }, headers: await authHeaders(), body: {} });
+  if (!data) return { message: error?.message ?? 'The next slot is not free.' };
+  redirect(`/bookings/${data.id}/pay`);
+}

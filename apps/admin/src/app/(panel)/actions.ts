@@ -137,3 +137,13 @@ export async function assignCaptain(teamId: string, _: FormState, form: FormData
   if (error) return fail(error);
   redirect('/reports?done=1');
 }
+
+export async function changeUserPhone(id: string, q: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/admin/users/{id}/phone', {
+    params: { path: { id } },
+    headers: await adminHeaders(),
+    body: { phone: text(form, 'phone') },
+  });
+  if (error) return fail(error);
+  redirect(`/users?q=${encodeURIComponent(q)}&done=1`);
+}
