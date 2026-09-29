@@ -2,3 +2,6 @@ node_modules
 .turbo
 .env*
 .DS_Store
+
+# Examples are committed; real values are not.
+!.env.example

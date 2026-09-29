@@ -1,5 +1,7 @@
 # SportsLink frontend
 
+What you need to supply to run and deploy, and what is still mocked: see [DEVELOPER_INPUT.md](DEVELOPER_INPUT.md).
+
 Monorepo for the SportsLink player and vendor apps and the admin panel. The API lives in `sport_link_be`.
 
 | App | Path | Stack | Local URL |
