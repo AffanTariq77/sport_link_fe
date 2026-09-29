@@ -117,3 +117,13 @@ export async function runBilling(): Promise<FormState> {
   if (error) return fail(error);
   return { message: data ? `Done: ${data.completed} bookings completed, ${data.issued} invoices issued, ${data.ladder} overdue steps.` : 'Another server is running billing right now.' };
 }
+
+export async function decideResult(id: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/admin/results/{id}/decide', {
+    params: { path: { id } },
+    headers: await adminHeaders(),
+    body: { outcome: text(form, 'outcome') as 'a' | 'b' | 'draw' | 'void', note: text(form, 'note') },
+  });
+  if (error) return fail(error);
+  redirect('/results?done=1');
+}

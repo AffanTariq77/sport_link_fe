@@ -7,6 +7,7 @@ const LINKS = [
   ['/matches', 'Matches'],
   ['/bookings', 'Bookings'],
   ['/chats', 'Chats'],
+  ['/leaderboards', 'Rankings'],
 ] as const;
 
 /** Top navigation for signed-in users, with the unread notification count. */
@@ -30,7 +31,7 @@ export async function SiteHeader() {
           )}
         </Link>
         {!user.locked && (
-          <div className="flex w-full gap-4 sm:w-auto">
+          <div className="flex w-full flex-wrap gap-x-4 gap-y-1 sm:w-auto">
             {LINKS.map(([href, label]) => (
               <Link key={href} href={href} className="hover:underline">
                 {label}

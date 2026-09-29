@@ -1,9 +1,10 @@
 import { formatDay, formatMoney, formatTime, paymentMethodName, type Schemas } from '@sportslink/api-client';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { myStatusText, playerStatusText, UNLISTED_WARNING } from '../../matchText';
-import { api, authHeaders } from '../../session';
+import { MatchResult } from '../../screens/MatchResult';
+import { api, authHeaders, currentUser } from '../../session';
 import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
 
 type Method = 'jazzcash' | 'easypaisa' | 'bank_transfer';
@@ -16,6 +17,7 @@ export default function MatchScreen() {
   const [reference, setReference] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [me, setMe] = useState<string | null>(null);
 
   const load = useCallback(
     () =>
@@ -37,6 +39,11 @@ export default function MatchScreen() {
       void load();
     }, [load]),
   );
+  useEffect(() => {
+    currentUser()
+      .then((u) => setMe(u?.id ?? null))
+      .catch(() => undefined);
+  }, []);
 
   const act = (task: () => Promise<{ error?: { message?: string } }>) =>
     run(setBusy, setMessage, async () => {
@@ -92,6 +99,7 @@ export default function MatchScreen() {
         />
       )}
       {m.me && <Text style={ui.label}>{myStatusText[m.me.status] ?? m.me.status}</Text>}
+      {me && (m.isHost || m.me?.status === 'confirmed') && <MatchResult id={id} tz={tz} me={me} />}
 
       {pay && m.me?.status === 'approved' && pay.shareStatus !== 'submitted' && (
         <View style={styles.box}>
@@ -132,8 +140,8 @@ export default function MatchScreen() {
       {m.players.length === 0 && <Text>No one has joined yet.</Text>}
       {m.players.map((p) => (
         <View key={p.userId} style={styles.box}>
-          <Text>
-            {p.name ?? 'Player'} · {playerStatusText[p.status] ?? p.status}
+          <Text onPress={() => router.push(`/players/${p.userId}`)} accessibilityRole="link">
+            <Text style={{ textDecorationLine: 'underline' }}>{p.name ?? 'Player'}</Text> · {playerStatusText[p.status] ?? p.status}
             {m.isHost && p.shareStatus ? ` · payment ${p.shareStatus}` : ''}
           </Text>
           {m.isHost && open && ['requested', 'waitlisted'].includes(p.status) && (

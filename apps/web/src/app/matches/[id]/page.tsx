@@ -8,6 +8,7 @@ import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
 import { openMatchChat } from '../../chats/actions';
 import { cancelMatch, decideRequest, joinMatch, leaveMatch, payShare, removePlayer } from '../actions';
+import { ResultSection } from './result';
 
 export const metadata: Metadata = { title: 'Match · SportsLink' };
 
@@ -32,10 +33,15 @@ const doneText: Record<string, string> = {
   paid: 'Payment sent. The venue will confirm it.',
   left: 'You have left this match.',
   cancelled: 'Match cancelled.',
+  result: 'Result sent. The other side will be asked to confirm it.',
+  confirmed: 'Result confirmed. Ratings are updated.',
+  disputed: 'Dispute sent. SportsLink will review it.',
+  reviewed: 'Review sent. Thank you.',
 };
 
 export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
-  if (!(await currentUser())) redirect('/sign-in');
+  const user = await currentUser();
+  if (!user) redirect('/sign-in');
   const { id } = await props.params;
   const { done } = await props.searchParams;
   const headers = await authHeaders();
@@ -47,6 +53,8 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
       ? (await api.GET('/matches/{id}/pay', { params: { path: { id } }, headers })).data
       : undefined;
   const open = m.status === 'open' || m.status === 'full';
+  const playing = m.isHost || m.me?.status === 'confirmed';
+  const result = playing ? (await api.GET('/matches/{id}/result', { params: { path: { id } }, headers })).data : undefined;
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-6">
@@ -62,7 +70,11 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
           {!m.listed && ' · not listed on SportsLink'}
         </p>
         <p className="text-sm">
-          {m.slotsFilled} of {m.slotsTotal} players · host {m.host.name ?? 'Player'} · {m.status}
+          {m.slotsFilled} of {m.slotsTotal} players · host{' '}
+          <Link href={`/players/${m.host.id}`} className="underline">
+            {m.host.name ?? 'Player'}
+          </Link>{' '}
+          · {m.status.replace('_', ' ')}
           {m.pricePerPlayer !== null && m.currency && ` · ${formatMoney(m.pricePerPlayer, m.currency)} per player`}
         </p>
         <p className="text-xs">Joining closes {formatDay(m.joinCutoffAt, tz)}, {formatTime(m.joinCutoffAt, tz)}.</p>
@@ -82,6 +94,7 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
       )}
 
       {m.me && <p className="text-sm font-medium">{myStatusText[m.me.status] ?? m.me.status}</p>}
+      {result && <ResultSection matchId={m.id} state={result} me={user.id} tz={tz} />}
       {pay && m.me?.status === 'approved' && pay.shareStatus !== 'submitted' && (
         <section className="flex flex-col gap-3 rounded-lg border p-4 text-sm">
           <h2 className="font-semibold">Pay your share: {pay.amount !== null && formatMoney(pay.amount, pay.currency)}</h2>
@@ -116,7 +129,10 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
         {m.players.map((p) => (
           <div key={p.userId} className="flex flex-col gap-2 rounded-md border p-3 text-sm">
             <p>
-              <span className="font-medium">{p.name ?? 'Player'}</span> · {playerStatusText[p.status] ?? p.status}
+              <Link href={`/players/${p.userId}`} className="font-medium underline">
+                {p.name ?? 'Player'}
+              </Link>{' '}
+              · {playerStatusText[p.status] ?? p.status}
               {m.isHost && p.shareStatus && ` · payment ${p.shareStatus}`}
             </p>
             {m.isHost && open && ['requested', 'waitlisted'].includes(p.status) && (

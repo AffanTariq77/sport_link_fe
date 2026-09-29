@@ -66,6 +66,7 @@ export default function Home() {
         <Wards />
         <TextButton title="My bookings" onPress={() => router.push('/bookings')} />
         <TextButton title="Chats" onPress={() => router.push('/chats')} />
+        <TextButton title="Rankings" onPress={() => router.push('/leaderboards')} />
         <TextButton
           title={unread ? `Notifications (${unread})` : 'Notifications'}
           onPress={() => (setUnread(0), router.push('/notifications'))}

@@ -37,6 +37,8 @@ export async function createMatch(_: FormState, form: FormData): Promise<FormSta
         minAge: num(form, 'minAge'),
         maxAge: num(form, 'maxAge'),
         verifiedOnly: form.get('verifiedOnly') === 'on',
+        minRating: num(form, 'minRating'),
+        maxRating: num(form, 'maxRating'),
       },
     },
   });
@@ -95,4 +97,46 @@ export async function payShare(id: string, _: FormState, form: FormData): Promis
   });
   if (error) return fail(error);
   redirect(`/matches/${id}?done=paid`);
+}
+
+export async function submitResult(id: string, players: string[], _: FormState, form: FormData): Promise<FormState> {
+  const side = (s: string) => players.filter((p) => text(form, `side-${p}`) === s);
+  const { error } = await api.POST('/matches/{id}/result', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: {
+      sideA: side('a'),
+      sideB: side('b'),
+      outcome: text(form, 'outcome') as 'a' | 'b' | 'draw',
+      score: text(form, 'score') || undefined,
+    },
+  });
+  if (error) return fail(error);
+  redirect(`/matches/${id}?done=result`);
+}
+
+export async function respondToResult(id: string, _: FormState, form: FormData): Promise<FormState> {
+  const agree = text(form, 'answer') === 'agree';
+  const { error } = await api.POST('/matches/{id}/result/respond', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: { agree, note: text(form, 'note') || undefined },
+  });
+  if (error) return fail(error);
+  redirect(`/matches/${id}?done=${agree ? 'confirmed' : 'disputed'}`);
+}
+
+export async function reviewPlayer(id: string, toUserId: string, _: FormState, form: FormData): Promise<FormState> {
+  const { error } = await api.POST('/matches/{id}/reviews', {
+    params: { path: { id } },
+    headers: await authHeaders(),
+    body: {
+      toUserId,
+      stars: Number(text(form, 'stars')),
+      tags: form.getAll('tags').map(String),
+      comment: text(form, 'comment') || undefined,
+    },
+  });
+  if (error) return fail(error);
+  redirect(`/matches/${id}?done=reviewed`);
 }

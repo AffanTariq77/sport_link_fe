@@ -612,6 +612,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/matches/{id}/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RatingsController_state"];
+        put?: never;
+        post: operations["RatingsController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/result/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RatingsController_respond"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matches/{id}/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RatingsController_review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/players/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RatingsController_profile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leaderboards/{sport}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RatingsController_leaderboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/results/disputed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminResultsController_disputed"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/results/{id}/decide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminResultsController_decide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/vendor/calendar": {
         parameters: {
             query?: never;
@@ -2079,6 +2191,125 @@ export interface components {
             /** @enum {string} */
             status: "pending" | "approved" | "rejected";
         };
+        MatchResultState: {
+            finished: boolean;
+            participants: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+            }[];
+            result: {
+                /** Format: uuid */
+                id: string;
+                sideA: string[];
+                sideB: string[];
+                /**
+                 * @description a: side A won, b: side B won, or draw
+                 * @enum {string}
+                 */
+                outcome: "a" | "b" | "draw";
+                score: string | null;
+                /** @enum {string} */
+                status: "pending" | "confirmed" | "disputed" | "voided";
+                /** Format: date-time */
+                confirmBy: string;
+                /** Format: uuid */
+                submittedBy: string;
+            } | null;
+            canSubmit: boolean;
+            canRespond: boolean;
+            reviewTags: string[];
+            reviewable: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                reviewed: boolean;
+            }[];
+        };
+        SubmitResult: {
+            sideA: string[];
+            sideB: string[];
+            /**
+             * @description a: side A won, b: side B won, or draw
+             * @enum {string}
+             */
+            outcome: "a" | "b" | "draw";
+            score?: string;
+        };
+        RespondResult: {
+            agree: boolean;
+            note?: string;
+        };
+        ReviewPlayer: {
+            /** Format: uuid */
+            toUserId: string;
+            stars: number;
+            /** @default [] */
+            tags: string[];
+            comment?: string;
+        };
+        PlayerProfile: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            city: string | null;
+            verified: boolean;
+            matchesPlayed: number;
+            ratings: {
+                sport: string;
+                slug: string;
+                rating: number;
+                provisional: boolean;
+                tier: string | null;
+                games: number;
+            }[];
+            behaviour: {
+                average: number | null;
+                count: number;
+                topTags: {
+                    tag: string;
+                    count: number;
+                }[];
+            };
+        };
+        Leaderboard: {
+            rank: number;
+            /** Format: uuid */
+            id: string;
+            name: string;
+            city: string | null;
+            rating: number;
+            tier: string | null;
+            games: number;
+        }[];
+        DisputedResults: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            matchId: string;
+            sideA: string[];
+            sideB: string[];
+            sideANames: string[];
+            sideBNames: string[];
+            /**
+             * @description a: side A won, b: side B won, or draw
+             * @enum {string}
+             */
+            outcome: "a" | "b" | "draw";
+            score: string | null;
+            disputeNote: string | null;
+            /** Format: uuid */
+            submittedBy: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            createdAt: string;
+        }[];
+        DecideResult: {
+            /** @enum {string} */
+            outcome: "a" | "b" | "draw" | "void";
+            note: string;
+        };
         CalendarDay: {
             branch: {
                 /** Format: uuid */
@@ -2188,6 +2419,9 @@ export interface components {
              */
             gender?: "male" | "female" | "other" | "prefer_not_to_say" | null;
             verifiedOnly?: boolean;
+            /** @description Skill rating range (Glicko-2, unrated = 1500) */
+            minRating?: number;
+            maxRating?: number;
         };
         MatchSummary: {
             /** Format: uuid */
@@ -3951,6 +4185,277 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_state: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchResultState"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitResult"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "pending" | "confirmed" | "disputed" | "voided";
+                        /** Format: date-time */
+                        confirmBy: string;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_respond: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RespondResult"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "pending" | "confirmed" | "disputed" | "voided";
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewPlayer"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlayerProfile"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    RatingsController_leaderboard: {
+        parameters: {
+            query?: {
+                city?: string;
+            };
+            header?: never;
+            path: {
+                sport: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Leaderboard"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AdminResultsController_disputed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DisputedResults"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AdminResultsController_decide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecideResult"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        status: "pending" | "confirmed" | "disputed" | "voided";
+                    };
+                };
             };
             /** @description Error */
             default: {

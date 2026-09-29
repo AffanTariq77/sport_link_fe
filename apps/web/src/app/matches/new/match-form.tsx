@@ -108,6 +108,16 @@ export function MatchForm({
             <input name="maxAge" type="number" min={5} max={100} className={input} />
           </label>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <label className={labelClass}>
+            Minimum rating
+            <input name="minRating" type="number" min={0} max={4000} step={50} placeholder="1500 is new" className={input} />
+          </label>
+          <label className={labelClass}>
+            Maximum rating
+            <input name="maxRating" type="number" min={0} max={4000} step={50} className={input} />
+          </label>
+        </div>
         <label className="flex items-center gap-2">
           <input type="checkbox" name="verifiedOnly" /> Verified players only
         </label>
