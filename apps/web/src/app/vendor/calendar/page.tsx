@@ -18,7 +18,7 @@ function calendarDays(timeZone: string) {
   return [yesterday, ...nextDates(timeZone, 7)];
 }
 const hasStarted = (iso: string) => new Date(iso).getTime() <= Date.now();
-const on = 'border-neutral-900 bg-neutral-900 text-white dark:border-white dark:bg-white dark:text-neutral-900';
+const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
 
 export default async function CalendarPage(props: PageProps<'/vendor/calendar'>) {
   if (!(await currentUser())) redirect('/sign-in');

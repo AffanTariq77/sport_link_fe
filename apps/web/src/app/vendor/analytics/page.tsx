@@ -46,7 +46,7 @@ export default async function VendorAnalytics(props: PageProps<'/vendor/analytic
       {q.done === 'reply' && <p className="rounded-md border p-3 text-sm">Reply posted.</p>}
       <nav aria-label="Period" className="flex gap-2 text-sm">
         {[7, 30, 90].map((d) => (
-          <Link key={d} href={`/vendor/analytics?days=${d}`} className={`rounded-full border px-3 py-1 ${d === days ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900' : ''}`}>
+          <Link key={d} href={`/vendor/analytics?days=${d}`} className={`rounded-full border px-3 py-1 ${d === days ? 'bg-accent hover:opacity-90 text-white' : ''}`}>
             Last {d} days
           </Link>
         ))}

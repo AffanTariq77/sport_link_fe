@@ -36,7 +36,7 @@ export default async function NotificationsPage() {
           return (
             <li key={n.id}>
               {n.link ? (
-                <Link href={n.link} className={`${cls} hover:bg-neutral-50 dark:hover:bg-neutral-900`}>
+                <Link href={n.link} className={`${cls} hover:bg-neutral-50 dark:hover:bg-accent hover:opacity-90`}>
                   {body}
                 </Link>
               ) : (

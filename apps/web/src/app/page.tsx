@@ -28,7 +28,7 @@ export default async function Home() {
             </Link>
           )}
           <div className={`flex flex-wrap justify-center gap-4 ${user.locked ? 'hidden' : ''}`}>
-            <Link href="/venues" className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-neutral-900">
+            <Link href="/venues" className="rounded-md bg-accent hover:opacity-90 px-4 py-2 font-medium text-white">
               Book a venue
             </Link>
             <Link href="/matches" className="px-4 py-2 underline">
@@ -51,7 +51,7 @@ export default async function Home() {
         </form>
         </div>
       ) : (
-        <Link href="/sign-in" className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-neutral-900">
+        <Link href="/sign-in" className="rounded-md bg-accent hover:opacity-90 px-4 py-2 font-medium text-white">
           Sign in
         </Link>
       )}

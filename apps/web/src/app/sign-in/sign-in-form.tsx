@@ -5,7 +5,7 @@ import { useActionState } from 'react';
 import { signIn, type SignInState } from '../actions';
 
 const input = 'w-full rounded-md border border-neutral-400 px-3 py-2 text-base';
-const button = 'w-full rounded-md bg-neutral-900 px-3 py-2 font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900';
+const button = 'w-full rounded-md bg-accent hover:opacity-90 px-3 py-2 font-medium text-white disabled:opacity-50';
 
 export function SignInForm() {
   const [state, action, pending] = useActionState<SignInState, FormData>(signIn, { step: 'phone', phone: '' });

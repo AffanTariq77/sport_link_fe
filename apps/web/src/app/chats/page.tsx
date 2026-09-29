@@ -24,7 +24,7 @@ export default async function ChatsPage() {
                 <span className="block font-medium">{c.title}</span>
                 <span className="block truncate">{c.lastMessage ?? 'No messages yet'}</span>
               </span>
-              {c.unread > 0 && <span className="self-center rounded-full bg-neutral-900 px-2 text-xs text-white dark:bg-white dark:text-neutral-900">{c.unread}</span>}
+              {c.unread > 0 && <span className="self-center rounded-full bg-accent hover:opacity-90 px-2 text-xs text-white">{c.unread}</span>}
             </Link>
           </li>
         ))}

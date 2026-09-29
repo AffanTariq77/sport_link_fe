@@ -6,7 +6,7 @@ import { currentUser } from '@/lib/session';
 import { holdSlot } from '../../bookings/actions';
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-neutral-900 text-white dark:border-white dark:bg-white dark:text-neutral-900';
+const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
 
 export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
   const { id } = await props.params;

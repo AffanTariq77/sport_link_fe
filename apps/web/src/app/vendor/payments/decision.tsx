@@ -13,7 +13,7 @@ export function Decision({ id }: { id: string }) {
           name="decision"
           value="confirm"
           disabled={pending}
-          className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+          className="rounded-md bg-accent hover:opacity-90 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
         >
           Money received
         </button>

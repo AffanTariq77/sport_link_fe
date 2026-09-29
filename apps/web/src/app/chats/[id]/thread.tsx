@@ -48,7 +48,7 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
       <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-lg border p-3">
         {list.length === 0 && <li className="text-sm">No messages yet. Say hello.</li>}
         {list.map((m) => (
-          <li key={m.id} className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${m.mine ? 'self-end bg-neutral-900 text-white dark:bg-white dark:text-neutral-900' : 'self-start border'}`}>
+          <li key={m.id} className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${m.mine ? 'self-end bg-accent hover:opacity-90 text-white' : 'self-start border'}`}>
             {!m.mine && <p className="text-xs font-medium">{m.senderName ?? 'SportsLink'}</p>}
             <p className="whitespace-pre-wrap">{m.body}</p>
             <p className="text-right text-[10px] opacity-70">{time(m.createdAt)}</p>
@@ -67,7 +67,7 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
           </div>
         )}
         {state.message && <p className="text-sm">{state.message}</p>}
-        <button disabled={pending} className="self-end rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900">
+        <button disabled={pending} className="self-end rounded-md bg-accent hover:opacity-90 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">
           Send
         </button>
       </form>

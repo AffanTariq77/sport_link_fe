@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 export const metadata: Metadata = { title: 'Venues · SportsLink' };
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-neutral-900 text-white dark:border-white dark:bg-white dark:text-neutral-900';
+const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
 
 export default async function VenuesPage(props: PageProps<'/venues'>) {
   const { sport } = await props.searchParams;
