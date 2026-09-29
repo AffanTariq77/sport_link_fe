@@ -1,28 +1,33 @@
-import { formatDay, formatTime } from '@sportslink/api-client';
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { api } from '@/lib/api';
-import { authHeaders, currentUser } from '@/lib/session';
-import { MatchForm } from './match-form';
+import { formatDay, formatTime } from "@sportslink/api-client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { api } from "@/lib/api";
+import { authHeaders, currentUser } from "@/lib/session";
+import { MatchForm } from "./match-form";
 
-export const metadata: Metadata = { title: 'Create a match · SportsLink' };
+export const metadata: Metadata = { title: "Create a match · SportsLink" };
 
 const isUpcoming = (iso: string) => new Date(iso).getTime() > Date.now();
 
 export default async function NewMatchPage() {
-  if (!(await currentUser())) redirect('/sign-in');
+  if (!(await currentUser())) redirect("/sign-in");
   const headers = await authHeaders();
-  const [{ data: sports }, { data: myBookings }, { data: mine }] = await Promise.all([
-    api.GET('/sports'),
-    api.GET('/bookings/mine', { headers }),
-    api.GET('/matches/mine', { headers }),
-  ]);
+  const [{ data: sports }, { data: myBookings }, { data: mine }] =
+    await Promise.all([
+      api.GET("/sports"),
+      api.GET("/bookings/mine", { headers }),
+      api.GET("/matches/mine", { headers }),
+    ]);
   // Bookings the host has secured (advance paid or being checked) that do not have a match yet.
   const used = new Set(mine?.map((m) => m.bookingId) ?? []);
   const bookings =
     myBookings
-      ?.filter((b) => (b.status === 'confirmed' || b.status === 'pending_payment') && isUpcoming(b.startAt))
+      ?.filter(
+        (b) =>
+          (b.status === "confirmed" || b.status === "pending_payment") &&
+          isUpcoming(b.startAt),
+      )
       .filter((b) => !used.has(b.id))
       .map((b) => ({
         id: b.id,

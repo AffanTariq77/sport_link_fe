@@ -9,8 +9,8 @@ import {
 } from '@sportslink/api-client';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { api, authHeaders } from '../../session';
+import { Alert, Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { api, API_URL, authHeaders } from '../../session';
 import { failed, Message, run, styles as ui } from '../../ui';
 
 type Slot = Schemas['CourtSlots']['slots'][number];
@@ -97,6 +97,18 @@ export default function VenueScreen() {
         {venue.address}, {venue.city}
       </Text>
       {venue.facilities.length > 0 && <Text>{venue.facilities.join(', ').replaceAll('_', ' ')}</Text>}
+      {venue.photos.length > 0 && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={ui.row}>
+          {venue.photos.map((url, i) => (
+            <Image
+              key={url}
+              source={{ uri: API_URL + url }}
+              style={styles.photo}
+              accessibilityLabel={`${venue.name} photo ${i + 1}`}
+            />
+          ))}
+        </ScrollView>
+      )}
 
       <View style={styles.box}>
         <Text style={ui.label}>Before you book</Text>
@@ -141,6 +153,7 @@ export default function VenueScreen() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
+  photo: { width: 280, aspectRatio: 16 / 9, borderRadius: 8, backgroundColor: '#eee' },
   box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   slot: { width: '48%', borderWidth: 1, borderColor: '#999', borderRadius: 6, padding: 10, gap: 2 },

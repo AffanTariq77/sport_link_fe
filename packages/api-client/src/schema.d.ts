@@ -388,6 +388,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/vendor/branches/{id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["VendorsController_addPhoto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/branches/{id}/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["VendorsController_removePhoto"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/vendor/setup": {
         parameters: {
             query?: never;
@@ -558,6 +590,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["VendorsController_addAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/venues/{id}/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["VenuePhotosController_photo"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1641,6 +1689,8 @@ export interface components {
             city: string;
             address: string;
             facilities: string[];
+            /** @description Photo paths on this API, first is the cover */
+            photos: string[];
             sports: string[];
             courtCount: number;
             currency: string;
@@ -1654,6 +1704,8 @@ export interface components {
             city: string;
             address: string;
             facilities: string[];
+            /** @description Photo paths on this API, first is the cover */
+            photos: string[];
             currency: string;
             rules: string | null;
             timezone: string;
@@ -1851,6 +1903,9 @@ export interface components {
         RejectPayment: {
             reason: string;
         };
+        VenuePhoto: {
+            url: string;
+        };
         VendorSetup: {
             vendor: {
                 /** Format: uuid */
@@ -1870,6 +1925,7 @@ export interface components {
                 latitude: number;
                 longitude: number;
                 facilities: string[];
+                photos: string[];
                 rules: string | null;
                 timezone: string;
                 /** @enum {string} */
@@ -3450,6 +3506,76 @@ export interface operations {
             };
         };
     };
+    VendorsController_addPhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    photo: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VenuePhoto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VendorsController_removePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                photoId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     VendorsController_setup: {
         parameters: {
             query?: never;
@@ -3796,6 +3922,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PaymentAccountCreated"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    VenuePhotosController_photo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                photoId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

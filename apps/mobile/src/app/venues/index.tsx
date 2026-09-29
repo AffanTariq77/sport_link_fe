@@ -1,8 +1,8 @@
 import { formatMoney, type Schemas } from '@sportslink/api-client';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
-import { api } from '../../session';
+import { FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { api, API_URL } from '../../session';
 import { failed, Message, run, styles as ui } from '../../ui';
 
 export default function Venues() {
@@ -54,6 +54,7 @@ export default function Venues() {
       }
       renderItem={({ item: v }) => (
         <Pressable style={styles.card} onPress={() => router.push(`/venues/${v.id}`)} accessibilityRole="button">
+          {v.photos[0] && <Image source={{ uri: API_URL + v.photos[0] }} style={styles.cover} accessibilityIgnoresInvertColors />}
           <Text style={styles.name}>{v.name}</Text>
           <Text>
             {v.city} · {v.sports.join(', ')} · {v.courtCount} {v.courtCount === 1 ? 'court' : 'courts'}
@@ -69,4 +70,5 @@ const styles = StyleSheet.create({
   list: { padding: 16, gap: 12 },
   card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 16, gap: 4 },
   name: { fontSize: 16, fontWeight: '600' },
+  cover: { width: '100%', aspectRatio: 16 / 9, borderRadius: 6, marginBottom: 4, backgroundColor: '#eee' },
 });
