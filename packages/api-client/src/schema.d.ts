@@ -1268,6 +1268,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/venues/{id}/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_venueReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bookings/{id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AnalyticsController_review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/reviews/{id}/reply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AnalyticsController_reply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_vendor"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vendor/analytics/calculator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_calculator"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_platform"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/vendor/calendar": {
         parameters: {
             query?: never;
@@ -3266,6 +3362,127 @@ export interface components {
         };
         CancelTournament: {
             reason: string;
+        };
+        VenueReviews: {
+            average: number | null;
+            count: number;
+            reviews: {
+                /** Format: uuid */
+                id: string;
+                stars: number;
+                comment: string | null;
+                reply: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                author: string;
+            }[];
+        };
+        VenueReview: {
+            stars: number;
+            comment?: string;
+        };
+        ReviewReply: {
+            reply: string;
+        };
+        VendorAnalytics: {
+            currency: string;
+            /** Format: date-time */
+            from: string;
+            /** Format: date-time */
+            to: string;
+            bookings: {
+                total: number;
+                app: number;
+                manual: number;
+                completed: number;
+                noShows: number;
+            };
+            revenue: {
+                total: number;
+                app: number;
+                manual: number;
+                byCourt: {
+                    /** Format: uuid */
+                    courtId: string;
+                    court: string;
+                    branch: string;
+                    bookings: number;
+                    revenue: number;
+                }[];
+            };
+            occupancy: {
+                percent: number;
+                /** @description [weekday, 0 = Sunday][local hour] = booked hours */
+                heatmap: number[][];
+            };
+            cancellations: {
+                total: number;
+                byPlayer: number;
+                byVenue: number;
+            };
+            ratingTrend: {
+                month: string;
+                average: number;
+                count: number;
+            }[];
+            reviews: {
+                /** Format: uuid */
+                id: string;
+                branch: string;
+                stars: number;
+                comment: string | null;
+                reply: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        RevenueCalculator: {
+            occupancy: number;
+            projected: number;
+            fullMonth: number;
+            courts: {
+                /** Format: uuid */
+                courtId: string;
+                court: string;
+                branch: string;
+                fullMonth: number;
+                projected: number;
+            }[];
+        };
+        PlatformAnalytics: {
+            /** Format: date-time */
+            from: string;
+            /** Format: date-time */
+            to: string;
+            bookingValue: {
+                currency: string;
+                source: string;
+                count: number;
+                amount: number;
+            }[];
+            commission: {
+                due: number;
+                collected: number;
+            };
+            activeUsers: number;
+            newUsers: number;
+            /** @description Percent of the previous period’s active users still active */
+            retention: number | null;
+            topVenues: {
+                /** Format: uuid */
+                branchId: string;
+                name: string;
+                city: string;
+                bookings: number;
+            }[];
+            cities: {
+                city: string;
+                bookings: number;
+            }[];
+            sports: {
+                sport: string;
+                bookings: number;
+            }[];
         };
         CalendarDay: {
             branch: {
@@ -6726,6 +6943,200 @@ export interface operations {
                     "application/json": {
                         ok: boolean;
                     };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_venueReviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VenueReviews"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VenueReview"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_reply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewReply"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_vendor: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VendorAnalytics"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_calculator: {
+        parameters: {
+            query?: {
+                occupancy?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueCalculator"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    AnalyticsController_platform: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformAnalytics"];
                 };
             };
             /** @description Error */

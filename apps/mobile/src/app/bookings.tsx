@@ -153,6 +153,28 @@ export default function Bookings() {
                 onPress={() => router.push(`/pay/${b.id}`)}
               />
             )}
+            {(b.status === 'completed' || (b.status === 'confirmed' && new Date(b.endAt) < new Date())) && (
+              <TextButton
+                title="Review the venue"
+                onPress={() =>
+                  Alert.alert('How was the venue?', 'Your rating is shown on the venue page.', [
+                    ...[5, 4, 3, 2, 1].map((stars) => ({
+                      text: '★'.repeat(stars),
+                      onPress: () =>
+                        void run(setBusy, setMessage, async () => {
+                          const { error } = await api.POST('/bookings/{id}/review', {
+                            params: { path: { id: b.id } },
+                            headers: await authHeaders(),
+                            body: { stars },
+                          });
+                          setMessage(error ? (error.message ?? failed) : 'Thanks for your review.');
+                        }),
+                    })),
+                    { text: 'Cancel', style: 'cancel' as const },
+                  ])
+                }
+              />
+            )}
             {b.status === 'held' &&
               describePolicy(b.policy, b.currency).map((line) => <Text key={line}>{line}</Text>)}
           </View>

@@ -18,6 +18,7 @@ type Slot = Schemas['CourtSlots']['slots'][number];
 export default function VenueScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [venue, setVenue] = useState<Schemas['Venue'] | null>(null);
+  const [reviews, setReviews] = useState<Schemas['VenueReviews'] | null>(null);
   const [courtId, setCourtId] = useState<string>();
   const [date, setDate] = useState<string>();
   const [day, setDay] = useState<Schemas['CourtSlots'] | null>(null);
@@ -29,6 +30,7 @@ export default function VenueScreen() {
       const { data, error } = await api.GET('/venues/{id}', { params: { path: { id } } });
       if (!data) return setMessage(error?.message ?? failed);
       setVenue(data);
+      setReviews((await api.GET('/venues/{id}/reviews', { params: { path: { id } } })).data ?? null);
       setCourtId(data.courts[0]?.id);
       setDate(nextDates(data.timezone, 1)[0]);
     });
@@ -108,6 +110,21 @@ export default function VenueScreen() {
             />
           ))}
         </ScrollView>
+      )}
+
+      {reviews && reviews.count > 0 && (
+        <View style={styles.box}>
+          <Text style={ui.label}>
+            {reviews.average} out of 5 · {reviews.count} {reviews.count === 1 ? 'review' : 'reviews'}
+          </Text>
+          {reviews.reviews.slice(0, 3).map((r) => (
+            <Text key={r.id}>
+              {'★'.repeat(r.stars)} {r.author}
+              {r.comment ? `: ${r.comment}` : ''}
+              {r.reply ? `\nVenue: ${r.reply}` : ''}
+            </Text>
+          ))}
+        </View>
       )}
 
       <View style={styles.box}>

@@ -45,3 +45,13 @@ export async function answerRefund(id: string, received: boolean): Promise<PaySt
   if (error) return { message: error.message };
   redirect('/bookings');
 }
+
+export async function reviewVenue(bookingId: string, _: PayState, form: FormData): Promise<PayState> {
+  const { error } = await api.POST('/bookings/{id}/review', {
+    params: { path: { id: bookingId } },
+    headers: await authHeaders(),
+    body: { stars: Number(form.get('stars')), comment: String(form.get('comment') ?? '').trim() || undefined },
+  });
+  if (error) return { message: error.message ?? 'Something went wrong. Please try again.' };
+  redirect('/bookings?reviewed=1');
+}

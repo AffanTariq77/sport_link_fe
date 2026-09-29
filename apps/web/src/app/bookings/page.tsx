@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
-import { ActionForm } from '@sportslink/ui';
+import { ActionForm, input } from '@sportslink/ui';
 import { openBookingChat } from '../chats/actions';
-import { answerRefund, cancelBooking } from './actions';
+import { answerRefund, cancelBooking, reviewVenue } from './actions';
 
 export const metadata: Metadata = { title: 'My bookings · SportsLink' };
 
@@ -98,6 +98,21 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
               <Link href={`/bookings/${b.id}/pay`} className="mt-2 inline-block text-sm font-medium underline">
                 {b.status === 'held' ? 'Pay advance' : 'Payment details'}
               </Link>
+            )}
+            {(b.status === 'completed' || (b.status === 'confirmed' && new Date(b.endAt) < new Date())) && (
+              <details className="mt-2 text-sm">
+                <summary className="cursor-pointer underline">Review the venue</summary>
+                <ActionForm action={reviewVenue.bind(null, b.id)} button="Send review" className="mt-2 flex flex-col gap-2">
+                  <select name="stars" defaultValue="5" aria-label="Stars" className={input}>
+                    {[5, 4, 3, 2, 1].map((n) => (
+                      <option key={n} value={n}>
+                        {n} {n === 1 ? 'star' : 'stars'}
+                      </option>
+                    ))}
+                  </select>
+                  <input name="comment" maxLength={500} placeholder="What was it like? (optional)" aria-label="Comment" className={input} />
+                </ActionForm>
+              </details>
             )}
             {b.status === 'held' && (
               <ul className="mt-2 text-sm">

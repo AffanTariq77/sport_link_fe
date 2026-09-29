@@ -13,6 +13,7 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
   const query = await props.searchParams;
   const { data: venue } = await api.GET('/venues/{id}', { params: { path: { id } } });
   if (!venue) notFound();
+  const { data: reviews } = await api.GET('/venues/{id}/reviews', { params: { path: { id } } });
 
   const court = venue.courts.find((c) => c.id === query.court) ?? venue.courts[0];
   const dates = nextDates(venue.timezone, 7);
@@ -47,6 +48,25 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
             </li>
           ))}
         </ul>
+      )}
+
+      {reviews && reviews.count > 0 && (
+        <details className="rounded-lg border p-4 text-sm">
+          <summary className="cursor-pointer font-semibold">
+            {reviews.average} out of 5 · {reviews.count} {reviews.count === 1 ? 'review' : 'reviews'}
+          </summary>
+          <ul className="mt-2 flex flex-col gap-3">
+            {reviews.reviews.map((r) => (
+              <li key={r.id}>
+                <p>
+                  {'★'.repeat(r.stars)} · {r.author}
+                </p>
+                {r.comment && <p>{r.comment}</p>}
+                {r.reply && <p className="border-l-2 pl-2">Venue: {r.reply}</p>}
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
 
       <section className="flex flex-col gap-1 rounded-lg border p-4 text-sm">

@@ -103,6 +103,9 @@ export default async function VendorPage() {
         <Link href="/vendor/billing" className="underline">
           Billing
         </Link>
+        <Link href="/vendor/analytics" className="underline">
+          Analytics and reviews
+        </Link>
       </div>
 
       <section className="flex flex-col gap-3">
