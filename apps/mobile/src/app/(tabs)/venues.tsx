@@ -53,13 +53,28 @@ export default function Venues() {
         </View>
       }
       renderItem={({ item: v }) => (
-        <Pressable style={styles.card} onPress={() => router.push(`/venues/${v.id}`)} accessibilityRole="button">
-          {v.photos[0] && <Image source={{ uri: API_URL + v.photos[0] }} style={styles.cover} accessibilityIgnoresInvertColors />}
-          <Text style={styles.name}>{v.name}</Text>
-          <Text>
-            {v.city} · {v.sports.join(', ')} · {v.courtCount} {v.courtCount === 1 ? 'court' : 'courts'}
-          </Text>
-          {v.fromPricePerHour !== null && <Text>From {formatMoney(v.fromPricePerHour, v.currency)} an hour</Text>}
+        <Pressable style={({ pressed }) => [styles.card, pressed && ui.pressed]} onPress={() => router.push(`/venues/${v.id}`)} accessibilityRole="button">
+          <View style={styles.cover}>
+            {v.photos[0] ? (
+              <Image source={{ uri: API_URL + v.photos[0] }} style={StyleSheet.absoluteFill} accessibilityIgnoresInvertColors />
+            ) : (
+              <Text style={styles.initial}>{v.name.slice(0, 1)}</Text>
+            )}
+            {v.fromPricePerHour !== null && <Text style={styles.price}>From {formatMoney(v.fromPricePerHour, v.currency)}/hr</Text>}
+          </View>
+          <View style={styles.body}>
+            <Text style={styles.name}>{v.name}</Text>
+            <Text style={styles.muted}>
+              {v.city} · {v.courtCount} {v.courtCount === 1 ? 'court' : 'courts'}
+            </Text>
+            <View style={ui.row}>
+              {v.sports.map((sp) => (
+                <Text key={sp} style={styles.sport}>
+                  {sp}
+                </Text>
+              ))}
+            </View>
+          </View>
         </Pressable>
       )}
     />
@@ -68,7 +83,12 @@ export default function Venues() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 12 },
-  card: { ...card, padding: 16, gap: 4 },
-  name: { fontSize: 16, fontWeight: '600' },
-  cover: { width: '100%', aspectRatio: 16 / 9, borderRadius: 6, marginBottom: 4, backgroundColor: colors.line },
+  card: { ...card, overflow: 'hidden' },
+  cover: { width: '100%', aspectRatio: 16 / 9, backgroundColor: colors.navy, alignItems: 'center', justifyContent: 'center' },
+  initial: { color: colors.accent, fontSize: 48, fontWeight: '900' },
+  price: { position: 'absolute', left: 12, bottom: 12, backgroundColor: colors.accent, color: colors.navy, fontWeight: '900', fontSize: 13, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4, overflow: 'hidden' },
+  body: { padding: 14, gap: 6 },
+  name: { fontSize: 18, fontWeight: '800', color: colors.text },
+  muted: { color: colors.muted },
+  sport: { backgroundColor: colors.surface, color: colors.text, fontSize: 12, fontWeight: '700', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 3, overflow: 'hidden' },
 });
