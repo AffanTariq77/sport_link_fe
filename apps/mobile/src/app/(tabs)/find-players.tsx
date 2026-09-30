@@ -1,11 +1,11 @@
 import { formatDay, formatTime, type Schemas } from '@sportslink/api-client';
-import * as Location from 'expo-location';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { statusText } from '../../findText';
+import { RadiusMap } from '../../RadiusMap';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card, colors } from '../../ui';
 
 const tz = 'Asia/Karachi';
 type AlertMode = 'always' | 'available' | 'off';
@@ -52,19 +52,6 @@ export default function FindPlayers() {
     }, [load]),
   );
 
-  const share = () =>
-    run(setBusy, setMessage, async () => {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (!granted) return setMessage('Location permission was not given.');
-      const p = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      const { error } = await api.PUT('/me/location', {
-        headers: await authHeaders(),
-        body: { latitude: p.coords.latitude, longitude: p.coords.longitude },
-      });
-      if (error) return setMessage(error.message ?? failed);
-      setMessage('Location shared. Only a rounded area is kept, and others see distance bands only.');
-      await load();
-    });
   const save = (body: { alertMode?: AlertMode; available?: boolean; quietHoursOk?: boolean }) =>
     run(setBusy, setMessage, async () => {
       const { data, error } = await api.PUT('/me/availability', { headers: await authHeaders(), body });
@@ -83,7 +70,8 @@ export default function FindPlayers() {
 
   return (
     <ScrollView contentContainerStyle={styles.page} refreshControl={<RefreshControl refreshing={busy} onRefresh={load} />} keyboardShouldPersistTaps="handled">
-      <Text>Short of players? Ask players nearby. They accept, you pick who joins, then agree the details in chat.</Text>
+      <RadiusMap radiusKm={Number(radius)} hasLocation={!!me?.hasLocation} onShared={load} />
+      <Text style={styles.intro}>Short of players? Ask players nearby. They accept, you pick who joins, then agree the details in chat.</Text>
       <Message>{message}</Message>
       {me && (
         <View style={styles.box}>
@@ -105,7 +93,6 @@ export default function FindPlayers() {
             <Text style={{ flex: 1 }}>Alerts at night are fine</Text>
             <Switch value={me.quietHoursOk} onValueChange={(quietHoursOk) => save({ quietHoursOk })} accessibilityLabel="Alerts at night are fine" />
           </View>
-          <TextButton title={me.hasLocation ? 'Update my location' : 'Share my location'} onPress={share} busy={busy} />
         </View>
       )}
 
@@ -114,9 +101,10 @@ export default function FindPlayers() {
           <Text style={ui.label}>Players needed near you</Text>
           {mine.incoming.map((r) => (
             <Pressable key={r.id} style={styles.box} onPress={() => router.push(`/find-players/${r.id}`)} accessibilityRole="button">
-              <Text style={ui.label}>
-                {r.sport} · {r.distance} away
-              </Text>
+              <View style={styles.line}>
+                <Text style={[ui.label, { flex: 1 }]}>{r.sport}</Text>
+                <Text style={styles.band}>{r.distance} away</Text>
+              </View>
               <Text>
                 {r.requester} · until {formatDay(r.windowEnd, tz)}, {formatTime(r.windowEnd, tz)} · {statusText[r.myStatus] ?? r.myStatus}
               </Text>
@@ -127,7 +115,7 @@ export default function FindPlayers() {
 
       <View style={styles.box}>
         <Text style={ui.label}>Ask for players</Text>
-        {!me?.hasLocation && <Text>Share your location first so we can find players near you.</Text>}
+        {!me?.hasLocation && <Text>Share your location on the map first so we can find players near you.</Text>}
         <Chips value={sport} options={sports.map((s) => [s.slug, s.name])} onChange={setSport} />
         <Field label="Players needed" value={needed} onChangeText={setNeeded} keyboardType="number-pad" />
         <Field label="Within (km)" value={radius} onChangeText={setRadius} keyboardType="number-pad" />
@@ -158,4 +146,6 @@ const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
   box: { ...card, padding: 12, gap: 8 },
   line: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  intro: { color: colors.muted },
+  band: { backgroundColor: '#ffe3d1', color: colors.accentText, fontWeight: '800', fontSize: 12, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3, overflow: 'hidden' },
 });

@@ -7,6 +7,7 @@ import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
 import { answerRequest, closeRequest, convertToMatch, dropPlayer, openFindChat, pickPlayers } from '../actions';
 import { LiveRefresh } from '../live';
+import { RadiusMap } from '../map';
 import { statusText } from '../text';
 
 export const metadata: Metadata = { title: 'Find Players · SportsLink' };
@@ -43,6 +44,21 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
           {formatTime(r.windowStart, tz)} to {formatTime(r.windowEnd, tz)} · {r.status}
         </p>
       </div>
+      {r.mine && live && <RadiusMap radiusKm={r.radiusKm} searching={r.status === 'open'} hasLocation />}
+      {r.mine && (
+        <dl className="grid grid-cols-3 gap-3 text-center">
+          {[
+            ['Asked', r.notified],
+            ['Said yes', accepted.length],
+            ['Picked', picked.length],
+          ].map(([label, n]) => (
+            <div key={label} className="rounded-2xl border bg-card p-3">
+              <dd className="text-2xl font-black">{n}</dd>
+              <dt className="text-xs font-bold uppercase tracking-wide text-muted">{label}</dt>
+            </div>
+          ))}
+        </dl>
+      )}
       {r.mine && typeof sent === 'string' && (
         <p className="rounded-xl border bg-card p-3 text-sm">
           {sent === '0' ? (

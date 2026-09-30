@@ -3,6 +3,7 @@ import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { statusText } from '../../findText';
+import { RadiusMap } from '../../RadiusMap';
 import { api, authHeaders } from '../../session';
 import { Button, failed, Message, run, styles as ui, TextButton, card, colors } from '../../ui';
 
@@ -51,6 +52,23 @@ export default function FindRequest() {
   const picked = r.players.filter((p) => p.status === 'selected');
   return (
     <ScrollView contentContainerStyle={styles.page} refreshControl={<RefreshControl refreshing={busy} onRefresh={() => void load()} />}>
+      {r.mine && live && <RadiusMap radiusKm={r.radiusKm} searching={r.status === 'open'} hasLocation />}
+      {r.mine && (
+        <View style={styles.stats}>
+          {(
+            [
+              ['Asked', r.notified],
+              ['Said yes', accepted.length],
+              ['Picked', picked.length],
+            ] as const
+          ).map(([label, n]) => (
+            <View key={label} style={styles.stat}>
+              <Text style={styles.statNumber}>{n}</Text>
+              <Text style={styles.statLabel}>{label}</Text>
+            </View>
+          ))}
+        </View>
+      )}
       <Text style={ui.heading}>
         {r.sport}: {r.playersNeeded} {r.playersNeeded === 1 ? 'player' : 'players'} needed
       </Text>
@@ -132,6 +150,10 @@ export default function FindRequest() {
 }
 
 const styles = StyleSheet.create({
+  stats: { flexDirection: 'row', gap: 8 },
+  stat: { ...card, flex: 1, alignItems: 'center', paddingVertical: 12 },
+  statNumber: { fontSize: 24, fontWeight: '900', color: colors.navy },
+  statLabel: { fontSize: 11, fontWeight: '800', color: colors.muted, textTransform: 'uppercase', letterSpacing: 0.5 },
   page: { padding: 16, gap: 10 },
   box: { ...card, padding: 12, gap: 6 },
   on: { borderColor: colors.navy, borderWidth: 2 },

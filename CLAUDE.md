@@ -53,6 +53,8 @@ Tokens live in one place per app: `apps/web/src/app/globals.css` (Tailwind `bg-c
 white on orange fails contrast; orange text uses the darker `accent-text`. Icons: `lucide-react` on web,
 `@expo/vector-icons` (Ionicons) on mobile. Navigation: bottom tab bar (Home, Book, Matches, Find, Chats) on mobile and on
 phone-width web (`components/nav-links.tsx`), navy top bar with all links on desktop. The admin panel keeps its plain theme.
+Find Players map: the player's own position and search radius only (web `find-players/map.tsx` with Leaflet, mobile
+`src/RadiusMap.tsx` with react-native-maps). Never put other players on it.
 
 ## Engineering rules
 

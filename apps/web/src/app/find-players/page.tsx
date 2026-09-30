@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { api } from '@/lib/api';
 import { authHeaders, currentUser } from '@/lib/session';
 import { createRequest, saveAvailability } from './actions';
-import { ShareLocation } from './live';
+import { RadiusMap } from './map';
 import { statusText } from './text';
 
 export const metadata: Metadata = { title: 'Find Players · SportsLink' };
@@ -23,8 +23,11 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
   ]);
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-6">
-      <h1 className="text-2xl font-semibold">Find Players</h1>
-      <p className="text-sm">Short of players? Ask players nearby. They accept, you pick who joins, then agree the details in chat.</p>
+      <div>
+        <h1 className="text-3xl">Find Players</h1>
+        <p className="text-sm text-muted">Short of players? Ask players nearby. They accept, you pick who joins, then agree the details in chat.</p>
+      </div>
+      <RadiusMap radiusKm={5} hasLocation={!!me?.hasLocation} />
       {done === 'saved' && <p className="rounded-xl border bg-card p-3 text-sm">Saved.</p>}
 
       {mine && mine.incoming.length > 0 && (
@@ -33,8 +36,9 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
           {mine.incoming.map((r) => (
             <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between gap-3 rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span>
-                <span className="block font-medium">
-                  {r.sport} · {r.distance} away
+                <span className="flex items-center gap-2 font-bold">
+                  {r.sport}
+                  <span className="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-bold text-accent-text">{r.distance} away</span>
                 </span>
                 <span className="block">
                   {r.requester} · until {formatDay(r.windowEnd, tz)}, {formatTime(r.windowEnd, tz)}
@@ -48,8 +52,7 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <h2 className="font-semibold">Ask for players</h2>
-        {!me?.hasLocation && <p className="text-sm">Share your location first so we can find players near you.</p>}
-        <ShareLocation label={me?.hasLocation ? 'Update my location' : 'Share my location'} />
+        {!me?.hasLocation && <p className="text-sm">Share your location on the map first so we can find players near you.</p>}
         <ActionForm action={createRequest} button="Send request">
           <label className={labelClass}>
             Sport
@@ -110,8 +113,8 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
           <h2 className="text-lg font-semibold">Your requests</h2>
           {mine.sent.map((r) => (
             <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between rounded-xl border bg-card p-3 text-sm hover:border-accent">
-              <span className="font-medium">{r.sport}</span>
-              <span>{r.status}</span>
+              <span className="font-bold">{r.sport}</span>
+              <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${r.status === 'open' ? 'bg-accent text-on-accent' : 'bg-surface'}`}>{r.status}</span>
             </Link>
           ))}
         </section>
