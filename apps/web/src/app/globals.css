@@ -14,6 +14,14 @@
   --accent: #ff6b1a;
   --on-accent: #0b1b3f;
   --accent-text: #c2410c;
+  /* Charts (vendor analytics): series pair and a one-hue ramp, both checked with the dataviz validator. */
+  --chart-app: #e8590c;
+  --chart-manual: #2f5bd3;
+  --heat-1: #fde4d3;
+  --heat-2: #fbbf95;
+  --heat-3: #f7934f;
+  --heat-4: #e8590c;
+  --heat-5: #b93d05;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,6 +36,13 @@
     --accent: #ff7a2e;
     --on-accent: #0b1b3f;
     --accent-text: #ff8a47;
+    --chart-app: #e8590c;
+    --chart-manual: #5b8def;
+    --heat-1: #4a2c24;
+    --heat-2: #7a3a1c;
+    --heat-3: #b34a12;
+    --heat-4: #e8590c;
+    --heat-5: #ff9a5c;
   }
 }
 
