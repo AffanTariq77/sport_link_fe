@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Message, run, styles as ui } from '../../ui';
+import { Button, failed, Message, run, styles as ui, card } from '../../ui';
 
 type Match = Schemas['MatchSummary'];
 
@@ -84,6 +84,6 @@ export default function Matches() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 14, gap: 2 },
+  card: { ...card, padding: 14, gap: 2 },
   name: { fontSize: 16, fontWeight: '600' },
 });

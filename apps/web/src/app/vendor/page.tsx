@@ -28,7 +28,7 @@ const branchStatusText: Record<string, string> = {
   banned: 'Banned',
 };
 const accountStatusText: Record<string, string> = { pending: 'Waiting for approval', approved: 'Approved', rejected: 'Rejected' };
-const card = 'rounded-lg border p-4';
+const card = 'rounded-xl border bg-card p-4';
 const STAFF_PERMISSION_TEXT: Record<string, string> = {
   view_bookings: 'See the calendar',
   create_bookings: 'Add walk-in bookings and blocks',
@@ -113,7 +113,7 @@ export default async function VendorPage() {
         {setup.branches.map((b) => {
           const todo = b.checklist.filter((c) => !c.done);
           return (
-            <Link key={b.id} href={`/vendor/branches/${b.id}`} className={`${card} hover:border-neutral-900`}>
+            <Link key={b.id} href={`/vendor/branches/${b.id}`} className={`${card} hover:border-accent`}>
               <p className="font-semibold">{b.name}</p>
               <p className="text-sm">{branchStatusText[b.status] ?? b.status}</p>
               <p className="text-sm">

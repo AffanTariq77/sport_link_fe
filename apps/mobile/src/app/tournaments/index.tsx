@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
 import { formatName } from '../../tournamentText';
-import { failed, Message, run, styles as ui } from '../../ui';
+import { failed, Message, run, styles as ui, card } from '../../ui';
 
 const tz = 'Asia/Karachi';
 
@@ -68,5 +68,5 @@ export default function Tournaments() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 10 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 4 },
+  card: { ...card, padding: 12, gap: 4 },
 });

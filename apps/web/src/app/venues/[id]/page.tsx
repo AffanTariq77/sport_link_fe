@@ -6,7 +6,7 @@ import { currentUser } from '@/lib/session';
 import { holdSlot } from '../../bookings/actions';
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
+const on = 'border-accent bg-accent hover:opacity-90 text-on-accent';
 
 export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
   const { id } = await props.params;
@@ -44,14 +44,14 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
           {venue.photos.map((url, i) => (
             <li key={url} className="w-4/5 shrink-0 snap-start sm:w-2/3">
               {/* eslint-disable-next-line @next/next/no-img-element -- served by our own route */}
-              <img src={url} alt={`${venue.name} photo ${i + 1}`} className="aspect-video w-full rounded-lg border object-cover" />
+              <img src={url} alt={`${venue.name} photo ${i + 1}`} className="aspect-video w-full rounded-xl border bg-card object-cover" />
             </li>
           ))}
         </ul>
       )}
 
       {reviews && reviews.count > 0 && (
-        <details className="rounded-lg border p-4 text-sm">
+        <details className="rounded-xl border bg-card p-4 text-sm">
           <summary className="cursor-pointer font-semibold">
             {reviews.average} out of 5 · {reviews.count} {reviews.count === 1 ? 'review' : 'reviews'}
           </summary>
@@ -69,7 +69,7 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
         </details>
       )}
 
-      <section className="flex flex-col gap-1 rounded-lg border p-4 text-sm">
+      <section className="flex flex-col gap-1 rounded-xl border bg-card p-4 text-sm">
         <h2 className="font-semibold">Before you book</h2>
         {describePolicy(venue.policy, venue.currency).map((line) => (
           <p key={line}>{line}</p>
@@ -107,7 +107,7 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
               name="slot"
               value={`${s.startAt}|${s.endAt}`}
               disabled={!s.available || !user}
-              className="rounded-md border p-2 text-left text-sm enabled:hover:border-neutral-900 disabled:opacity-40"
+              className="rounded-xl border bg-card p-2 text-left text-sm enabled:hover:border-accent disabled:opacity-40"
             >
               <span className="block font-medium">
                 {formatTime(s.startAt, venue.timezone)} to {formatTime(s.endAt, venue.timezone)}
@@ -118,14 +118,14 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
         </form>
       )}
       {user && venue.policy.recurringAllowed && court && day && day.slots.some((s) => s.available) && (
-        <details className="rounded-lg border p-4 text-sm">
+        <details className="rounded-xl border bg-card p-4 text-sm">
           <summary className="cursor-pointer font-semibold">Book the same slot every week</summary>
           <form action="/bookings/weekly" className="mt-2 flex flex-wrap items-end gap-3">
             <input type="hidden" name="court" value={court.id} />
             <input type="hidden" name="venue" value={venue.id} />
             <label className="flex flex-col gap-1">
               Slot
-              <select name="slot" className="rounded-md border px-3 py-2">
+              <select name="slot" className="rounded-xl border bg-card px-3 py-2">
                 {day.slots
                   .filter((s) => s.available)
                   .map((s) => (
@@ -137,9 +137,9 @@ export default async function VenuePage(props: PageProps<'/venues/[id]'>) {
             </label>
             <label className="flex flex-col gap-1">
               Weeks
-              <input name="weeks" type="number" min={2} max={12} defaultValue={4} className="w-20 rounded-md border px-3 py-2" />
+              <input name="weeks" type="number" min={2} max={12} defaultValue={4} className="w-20 rounded-xl border bg-card px-3 py-2" />
             </label>
-            <button className="rounded-md border px-4 py-2 font-medium">Check the weeks</button>
+            <button className="rounded-xl border bg-card px-4 py-2 font-medium">Check the weeks</button>
           </form>
         </details>
       )}

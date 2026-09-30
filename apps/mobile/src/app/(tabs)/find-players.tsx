@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { statusText } from '../../findText';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../../ui';
 
 const tz = 'Asia/Karachi';
 type AlertMode = 'always' | 'available' | 'off';
@@ -156,6 +156,6 @@ export default function FindPlayers() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 8 },
+  box: { ...card, padding: 12, gap: 8 },
   line: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

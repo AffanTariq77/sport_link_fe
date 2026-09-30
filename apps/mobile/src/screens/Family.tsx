@@ -2,7 +2,7 @@ import { bookingStatusText, formatDay, formatTime, type Schemas } from '@sportsl
 import { useCallback, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { Button, failed, Field, Message, run, styles, TextButton } from '../ui';
+import { Button, failed, Field, Message, run, styles, TextButton, card } from '../ui';
 
 /** A locked minor names their parent or guardian (spec 5). */
 export function GuardianStep() {
@@ -24,7 +24,7 @@ export function GuardianStep() {
     });
 
   return (
-    <View style={[styles.form, { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 }]}>
+    <View style={[styles.form, { ...card, padding: 12 }]}>
       <Text style={styles.label}>Ask a parent or guardian</Text>
       <Text>
         {status?.status === 'pending'
@@ -76,7 +76,7 @@ export function Wards() {
       <Text style={styles.label}>Your children</Text>
       <Message>{message}</Message>
       {wards.map((w) => (
-        <View key={w.id} style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 }}>
+        <View key={w.id} style={{ ...card, padding: 12, gap: 6 }}>
           {w.consentAt ? (
             <>
               <Text style={styles.label}>{w.name ?? 'Your child'}</Text>

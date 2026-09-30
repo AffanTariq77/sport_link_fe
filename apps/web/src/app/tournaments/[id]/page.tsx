@@ -56,7 +56,7 @@ export default async function TournamentPage(props: PageProps<'/tournaments/[id]
           {rules.length > 0 && ` · open to ${rules.join(', ')}`}
         </p>
       </div>
-      {typeof done === 'string' && doneText[done] && <p className="rounded-md border p-3 text-sm">{doneText[done]}</p>}
+      {typeof done === 'string' && doneText[done] && <p className="rounded-xl border bg-card p-3 text-sm">{doneText[done]}</p>}
 
       {t.registrationOpen && t.mine.length === 0 && (t.teamEntry ? myTeams.length > 0 : true) && (
         <ActionForm action={enterTournament.bind(null, t.id)} button={t.teamEntry ? 'Enter my team' : 'Enter'} className="flex flex-wrap items-center gap-3">
@@ -78,7 +78,7 @@ export default async function TournamentPage(props: PageProps<'/tournaments/[id]
       )}
 
       {t.mine.map((m) => (
-        <section key={m.id} className="flex flex-col gap-3 rounded-lg border p-4 text-sm">
+        <section key={m.id} className="flex flex-col gap-3 rounded-xl border bg-card p-4 text-sm">
           <p className="font-semibold">
             {m.name}: {entryText[m.status] ?? m.status}
           </p>
@@ -150,7 +150,7 @@ export default async function TournamentPage(props: PageProps<'/tournaments/[id]
           {t.fixtures
             .filter((f) => f.stage === stage && f.status !== 'bye')
             .map((f) => (
-              <div key={f.id} className="flex justify-between gap-3 rounded-md border p-3 text-sm">
+              <div key={f.id} className="flex justify-between gap-3 rounded-xl border bg-card p-3 text-sm">
                 <span>
                   Round {f.round}
                   {f.groupNo ? ` · group ${f.groupNo}` : ''}: {f.a ?? 'to be decided'} v {f.b ?? 'to be decided'}

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { failed, Message, run, styles as ui } from '../ui';
+import { failed, Message, run, styles as ui, card } from '../ui';
 
 export default function Leaderboards() {
   const [sports, setSports] = useState<Schemas['Sport'][]>([]);
@@ -70,6 +70,6 @@ export default function Leaderboards() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 10 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 10, ...card, padding: 12 },
   rank: { width: 24, textAlign: 'right', fontWeight: '600' },
 });

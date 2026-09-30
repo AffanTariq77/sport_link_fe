@@ -25,13 +25,13 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 p-6">
       <h1 className="text-2xl font-semibold">Find Players</h1>
       <p className="text-sm">Short of players? Ask players nearby. They accept, you pick who joins, then agree the details in chat.</p>
-      {done === 'saved' && <p className="rounded-md border p-3 text-sm">Saved.</p>}
+      {done === 'saved' && <p className="rounded-xl border bg-card p-3 text-sm">Saved.</p>}
 
       {mine && mine.incoming.length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="text-lg font-semibold">Players needed near you</h2>
           {mine.incoming.map((r) => (
-            <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between gap-3 rounded-lg border p-3 text-sm hover:border-neutral-900">
+            <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between gap-3 rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span>
                 <span className="block font-medium">
                   {r.sport} · {r.distance} away
@@ -46,7 +46,7 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
         </section>
       )}
 
-      <section className="flex flex-col gap-3 rounded-lg border p-4">
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <h2 className="font-semibold">Ask for players</h2>
         {!me?.hasLocation && <p className="text-sm">Share your location first so we can find players near you.</p>}
         <ShareLocation label={me?.hasLocation ? 'Update my location' : 'Share my location'} />
@@ -109,7 +109,7 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
         <section className="flex flex-col gap-2">
           <h2 className="text-lg font-semibold">Your requests</h2>
           {mine.sent.map((r) => (
-            <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between rounded-lg border p-3 text-sm hover:border-neutral-900">
+            <Link key={r.id} href={`/find-players/${r.id}`} className="flex justify-between rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span className="font-medium">{r.sport}</span>
               <span>{r.status}</span>
             </Link>
@@ -118,7 +118,7 @@ export default async function FindPlayersPage(props: PageProps<'/find-players'>)
       )}
 
       {me && (
-        <details className="flex flex-col gap-3 rounded-lg border p-4">
+        <details className="flex flex-col gap-3 rounded-xl border bg-card p-4">
           <summary className="cursor-pointer font-semibold">Alerts for you</summary>
           <ActionForm action={saveAvailability} button="Save">
             <label className={labelClass}>

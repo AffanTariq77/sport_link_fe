@@ -5,7 +5,7 @@ import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } 
 import { myStatusText, playerStatusText, UNLISTED_WARNING } from '../../matchText';
 import { MatchResult } from '../../screens/MatchResult';
 import { api, authHeaders, currentUser } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card, colors } from '../../ui';
 
 type Method = 'jazzcash' | 'easypaisa' | 'bank_transfer';
 
@@ -213,7 +213,7 @@ export default function MatchScreen() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 },
-  option: { borderWidth: 1, borderColor: '#999', borderRadius: 6, padding: 10, gap: 2 },
-  optionOn: { borderColor: '#171717', borderWidth: 2 },
+  box: { ...card, padding: 12, gap: 6 },
+  option: { borderWidth: 1, borderColor: colors.muted, borderRadius: 6, padding: 10, gap: 2 },
+  optionOn: { borderColor: colors.navy, borderWidth: 2 },
 });

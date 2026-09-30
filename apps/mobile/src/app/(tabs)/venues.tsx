@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, API_URL } from '../../session';
-import { failed, Message, run, styles as ui } from '../../ui';
+import { failed, Message, run, styles as ui, card, colors } from '../../ui';
 
 export default function Venues() {
   const [sports, setSports] = useState<Schemas['Sport'][]>([]);
@@ -68,7 +68,7 @@ export default function Venues() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 16, gap: 4 },
+  card: { ...card, padding: 16, gap: 4 },
   name: { fontSize: 16, fontWeight: '600' },
-  cover: { width: '100%', aspectRatio: 16 / 9, borderRadius: 6, marginBottom: 4, backgroundColor: '#eee' },
+  cover: { width: '100%', aspectRatio: 16 / 9, borderRadius: 6, marginBottom: 4, backgroundColor: colors.line },
 });

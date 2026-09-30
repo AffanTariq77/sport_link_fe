@@ -8,7 +8,7 @@ import { authHeaders } from '@/lib/session';
 export async function GuardianStep() {
   const { data } = await api.GET('/me/guardian', { headers: await authHeaders() });
   return (
-    <section className="flex w-full max-w-sm flex-col gap-3 rounded-lg border p-4 text-left text-sm">
+    <section className="flex w-full max-w-sm flex-col gap-3 rounded-xl border bg-card p-4 text-left text-sm">
       <h2 className="text-base font-semibold">Ask a parent or guardian</h2>
       {data?.status === 'pending' ? (
         <p>
@@ -41,11 +41,11 @@ export async function WardsSection() {
       <h2 className="text-base font-semibold">Your children</h2>
       {wards.map((w) =>
         w.consentAt ? (
-          <Link key={w.id} href={`/family/${w.id}`} className="rounded-lg border p-3 underline">
+          <Link key={w.id} href={`/family/${w.id}`} className="rounded-xl border bg-card p-3 underline">
             {w.name ?? 'Your child'}: see bookings and matches
           </Link>
         ) : (
-          <div key={w.id} className="flex flex-col gap-2 rounded-lg border p-3">
+          <div key={w.id} className="flex flex-col gap-2 rounded-xl border bg-card p-3">
             <p className="font-medium">{w.name ?? 'A player'} has asked you to approve their account.</p>
             <p className="whitespace-pre-wrap text-xs">{consent.text}</p>
             <ActionForm action={decideWard.bind(null, w.id, consent.version)} button="Save" className="flex items-center gap-4">

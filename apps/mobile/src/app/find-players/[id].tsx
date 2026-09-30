@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { statusText } from '../../findText';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Message, run, styles as ui, TextButton, card, colors } from '../../ui';
 
 const tz = 'Asia/Karachi';
 const POLL_MS = 5000; // ponytail: polling until realtime (Socket.IO) lands
@@ -133,7 +133,7 @@ export default function FindRequest() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 10 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 },
-  on: { borderColor: '#171717', borderWidth: 2 },
+  box: { ...card, padding: 12, gap: 6 },
+  on: { borderColor: colors.navy, borderWidth: 2 },
   line: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

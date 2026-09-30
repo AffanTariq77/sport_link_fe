@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders, signOut } from '../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../ui';
 
 export default function Account() {
   const [phone, setPhone] = useState('');
@@ -105,5 +105,5 @@ export default function Account() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 8 },
+  box: { ...card, padding: 12, gap: 8 },
 });

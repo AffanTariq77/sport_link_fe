@@ -40,10 +40,10 @@ export default async function TeamPage(props: PageProps<'/teams/[id]'>) {
           {t.rating && ` · rating ${t.rating.rating} ${t.rating.provisional ? '(provisional)' : `· ${t.rating.tier}`}`}
         </p>
       </div>
-      {typeof done === 'string' && doneText[done] && <p className="rounded-md border p-3 text-sm">{doneText[done]}</p>}
+      {typeof done === 'string' && doneText[done] && <p className="rounded-xl border bg-card p-3 text-sm">{doneText[done]}</p>}
 
       {t.invited && (
-        <section className="flex flex-col gap-3 rounded-lg border p-4 text-sm">
+        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4 text-sm">
           <p className="font-semibold">You are invited to join {t.name}.</p>
           <div className="flex gap-3">
             <ActionForm action={answerInvite.bind(null, t.id, true)} button="Join the team" className="flex" />
@@ -56,7 +56,7 @@ export default async function TeamPage(props: PageProps<'/teams/[id]'>) {
         <div className="flex flex-wrap gap-3">
           <ActionForm action={openTeamChat.bind(null, t.id)} button="Open the team chat" className="flex" />
           {leader && (
-            <Link href={`/matches/new?team=${t.id}`} className="rounded-md border px-4 py-2 text-sm font-medium">
+            <Link href={`/matches/new?team=${t.id}`} className="rounded-xl border bg-card px-4 py-2 text-sm font-medium">
               Create a team match
             </Link>
           )}
@@ -66,7 +66,7 @@ export default async function TeamPage(props: PageProps<'/teams/[id]'>) {
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold">Players</h2>
         {t.members.map((m) => (
-          <div key={m.id} className="flex flex-col gap-2 rounded-md border p-3 text-sm">
+          <div key={m.id} className="flex flex-col gap-2 rounded-xl border bg-card p-3 text-sm">
             <p>
               <Link href={`/players/${m.id}`} className="font-medium underline">
                 {m.name}
@@ -91,7 +91,7 @@ export default async function TeamPage(props: PageProps<'/teams/[id]'>) {
       </section>
 
       {leader && (
-        <section className="flex flex-col gap-3 rounded-lg border p-4">
+        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
           <h2 className="font-semibold">Invite a player</h2>
           <ActionForm action={invitePlayer.bind(null, t.id)} button="Send invite">
             <label className={labelClass}>
@@ -106,7 +106,7 @@ export default async function TeamPage(props: PageProps<'/teams/[id]'>) {
         <h2 className="text-lg font-semibold">Team matches</h2>
         {t.matches.length === 0 && <p>No team matches yet.</p>}
         {t.matches.map((m) => (
-          <Link key={m.id} href={`/matches/${m.id}`} className="flex justify-between rounded-md border p-3 hover:border-neutral-900">
+          <Link key={m.id} href={`/matches/${m.id}`} className="flex justify-between rounded-xl border bg-card p-3 hover:border-accent">
             <span>
               {formatDay(m.startAt, 'Asia/Karachi')} · {m.opponent ? `v ${m.opponent}` : 'waiting for an opponent'}
             </span>

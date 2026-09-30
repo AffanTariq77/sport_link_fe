@@ -117,7 +117,7 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
           </select>
         </ActionForm>
       )}
-      {typeof done === 'string' && doneText[done] && <p className="rounded-md border p-3 text-sm">{doneText[done]}</p>}
+      {typeof done === 'string' && doneText[done] && <p className="rounded-xl border bg-card p-3 text-sm">{doneText[done]}</p>}
       {(m.isHost || (m.me && ['approved', 'confirmed'].includes(m.me.status))) && (
         <ActionForm action={openMatchChat.bind(null, m.id)} button="Open the match chat" className="flex" />
       )}
@@ -134,12 +134,12 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
       {m.me && <p className="text-sm font-medium">{myStatusText[m.me.status] ?? m.me.status}</p>}
       {result && <ResultSection matchId={m.id} state={result} me={user.id} tz={tz} />}
       {pay && m.me?.status === 'approved' && pay.shareStatus !== 'submitted' && (
-        <section className="flex flex-col gap-3 rounded-lg border p-4 text-sm">
+        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4 text-sm">
           <h2 className="font-semibold">Pay your share: {pay.amount !== null && formatMoney(pay.amount, pay.currency)}</h2>
           {pay.shareStatus === 'rejected' && <p>The venue could not find your last payment. Check the ID and try again.</p>}
           <ActionForm action={payShare.bind(null, m.id)} button="I have paid">
             {pay.accounts.map((a) => (
-              <label key={a.method} className="flex gap-3 rounded-md border p-3">
+              <label key={a.method} className="flex gap-3 rounded-xl border bg-card p-3">
                 <input type="radio" name="method" value={a.method} required defaultChecked={a === pay.accounts[0]} />
                 <span>
                   <span className="block font-medium">{paymentMethodName[a.method]}</span>
@@ -165,7 +165,7 @@ export default async function MatchPage(props: PageProps<'/matches/[id]'>) {
         <h2 className="text-lg font-semibold">{m.isHost ? 'Players and requests' : 'Players'}</h2>
         {m.players.length === 0 && <p className="text-sm">No one has joined yet.</p>}
         {m.players.map((p) => (
-          <div key={p.userId} className="flex flex-col gap-2 rounded-md border p-3 text-sm">
+          <div key={p.userId} className="flex flex-col gap-2 rounded-xl border bg-card p-3 text-sm">
             <p>
               <Link href={`/players/${p.userId}`} className="font-medium underline">
                 {p.name ?? 'Player'}

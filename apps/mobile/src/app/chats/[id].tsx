@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { failed, Message, run, TextButton } from '../../ui';
+import { failed, Message, run, TextButton, colors } from '../../ui';
 
 type Msg = Schemas['ChatThread']['messages'][number];
 const POLL_MS = 4000; // ponytail: polling until realtime (Socket.IO, spec 2) is added
@@ -121,11 +121,11 @@ export default function ChatThread() {
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 8 },
   bubble: { maxWidth: '80%', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8 },
-  mine: { alignSelf: 'flex-end', backgroundColor: '#171717' },
-  theirs: { alignSelf: 'flex-start', borderWidth: 1, borderColor: '#ccc' },
+  mine: { alignSelf: 'flex-end', backgroundColor: colors.navy },
+  theirs: { alignSelf: 'flex-start', borderWidth: 1, borderColor: colors.line },
   mineText: { color: '#fff' },
   sender: { fontSize: 12, fontWeight: '600' },
   time: { fontSize: 10, alignSelf: 'flex-end', opacity: 0.7 },
-  composer: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12, borderTopWidth: 1, borderColor: '#eee' },
-  input: { flex: 1, borderWidth: 1, borderColor: '#999', borderRadius: 6, paddingHorizontal: 10, paddingVertical: 8, maxHeight: 120 },
+  composer: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12, borderTopWidth: 1, borderColor: colors.line },
+  input: { flex: 1, borderWidth: 1, borderColor: colors.muted, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 8, maxHeight: 120 },
 });

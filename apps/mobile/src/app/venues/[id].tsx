@@ -11,7 +11,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, API_URL, authHeaders } from '../../session';
-import { failed, Message, run, styles as ui } from '../../ui';
+import { failed, Message, run, styles as ui, card, colors } from '../../ui';
 
 type Slot = Schemas['CourtSlots']['slots'][number];
 
@@ -170,9 +170,9 @@ export default function VenueScreen() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  photo: { width: 280, aspectRatio: 16 / 9, borderRadius: 8, backgroundColor: '#eee' },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 4 },
+  photo: { width: 280, aspectRatio: 16 / 9, borderRadius: 8, backgroundColor: colors.line },
+  box: { ...card, padding: 12, gap: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  slot: { width: '48%', borderWidth: 1, borderColor: '#999', borderRadius: 6, padding: 10, gap: 2 },
+  slot: { width: '48%', borderWidth: 1, borderColor: colors.muted, borderRadius: 6, padding: 10, gap: 2 },
   taken: { opacity: 0.4 },
 });

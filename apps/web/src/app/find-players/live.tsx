@@ -26,7 +26,7 @@ export function ShareLocation({ label = 'Share my location' }: { label?: string 
   };
   return (
     <div className="flex flex-col gap-1 text-sm">
-      <button type="button" onClick={share} disabled={busy} className="self-start rounded-md border px-4 py-2 font-medium disabled:opacity-50">
+      <button type="button" onClick={share} disabled={busy} className="self-start rounded-xl border bg-card px-4 py-2 font-medium disabled:opacity-50">
         {busy ? 'Finding you…' : label}
       </button>
       {message && <p role="status">{message}</p>}

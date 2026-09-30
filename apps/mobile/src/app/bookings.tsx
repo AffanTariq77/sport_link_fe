@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { failed, Message, run, TextButton } from '../ui';
+import { failed, Message, run, TextButton, card } from '../ui';
 
 const refundText: Record<string, string> = {
   due: 'the venue will send it',
@@ -203,6 +203,6 @@ export default function Bookings() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 16, gap: 2 },
+  card: { ...card, padding: 16, gap: 2 },
   name: { fontSize: 16, fontWeight: '600' },
 });

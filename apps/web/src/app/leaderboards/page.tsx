@@ -7,7 +7,7 @@ import { authHeaders, currentUser } from '@/lib/session';
 export const metadata: Metadata = { title: 'Leaderboards · SportsLink' };
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
+const on = 'border-accent bg-accent hover:opacity-90 text-on-accent';
 
 export default async function LeaderboardsPage(props: PageProps<'/leaderboards'>) {
   const user = await currentUser();
@@ -52,7 +52,7 @@ export default async function LeaderboardsPage(props: PageProps<'/leaderboards'>
       <ol className="flex flex-col gap-2">
         {rows?.map((r) => (
           <li key={r.id}>
-            <Link href={`/players/${r.id}`} className="flex items-center gap-3 rounded-md border p-3 text-sm hover:border-neutral-900">
+            <Link href={`/players/${r.id}`} className="flex items-center gap-3 rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span className="w-6 text-right font-semibold">{r.rank}</span>
               <span className="flex-1">
                 <span className="block font-medium">{r.name}</span>

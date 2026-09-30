@@ -45,10 +45,10 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
 
   return (
     <div className="flex flex-col gap-3">
-      <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-lg border p-3">
+      <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-xl border bg-card p-3">
         {list.length === 0 && <li className="text-sm">No messages yet. Say hello.</li>}
         {list.map((m) => (
-          <li key={m.id} className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${m.mine ? 'self-end bg-accent hover:opacity-90 text-white' : 'self-start border'}`}>
+          <li key={m.id} className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${m.mine ? 'self-end bg-accent hover:opacity-90 text-on-accent' : 'self-start border'}`}>
             {!m.mine && <p className="text-xs font-medium">{m.senderName ?? 'SportsLink'}</p>}
             <p className="whitespace-pre-wrap">{m.body}</p>
             <p className="text-right text-[10px] opacity-70">{time(m.createdAt)}</p>
@@ -59,7 +59,7 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
       <form ref={formRef} onSubmit={keepValues(action)} className="flex flex-col gap-2">
         <textarea name="body" required maxLength={2000} rows={2} defaultValue={state.warning ? state.body : undefined} placeholder="Message" className={input} />
         {state.warning && (
-          <div className="rounded-md border-2 border-neutral-900 p-3 text-sm">
+          <div className="rounded-md border-2 border-accent p-3 text-sm">
             <p>{state.warning}</p>
             <button name="confirmPhone" value="1" disabled={pending} className="mt-2 underline">
               Send anyway
@@ -67,7 +67,7 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
           </div>
         )}
         {state.message && <p className="text-sm">{state.message}</p>}
-        <button disabled={pending} className="self-end rounded-md bg-accent hover:opacity-90 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">
+        <button disabled={pending} className="self-end rounded-md bg-accent hover:opacity-90 px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50">
           Send
         </button>
       </form>
@@ -81,7 +81,7 @@ export function Thread({ id, initial, timeZone }: { id: string; initial: Message
             <option value="other">Something else</option>
           </select>
           <textarea name="details" maxLength={1000} rows={2} placeholder="What happened (optional)" className={input} />
-          <button className="self-start rounded-md border px-3 py-1">Send report</button>
+          <button className="self-start rounded-xl border bg-card px-3 py-1">Send report</button>
           {reportState.message && <p>{reportState.message}</p>}
         </form>
       </details>

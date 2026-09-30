@@ -6,9 +6,9 @@ import { paymentMethodName } from '@sportslink/api-client';
 import { useActionState, useState } from 'react';
 import { type PayState, submitPayment } from '../../actions';
 
-const input = 'w-full rounded-md border border-neutral-400 px-3 py-2 text-base bg-transparent';
+const input = 'w-full rounded-xl border bg-card px-3 py-2 text-base bg-transparent';
 const button =
-  'w-full rounded-md bg-accent hover:opacity-90 px-3 py-2 font-medium text-white disabled:opacity-50';
+  'w-full rounded-md bg-accent hover:opacity-90 px-3 py-2 font-medium text-on-accent disabled:opacity-50';
 
 export function PayForm({
   bookingId,
@@ -28,7 +28,7 @@ export function PayForm({
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-sm font-medium">How did you pay?</legend>
         {info.accounts.map((a) => (
-          <label key={a.method} className="flex gap-3 rounded-md border p-3">
+          <label key={a.method} className="flex gap-3 rounded-xl border bg-card p-3">
             <input
               type="radio"
               name="method"
@@ -45,7 +45,7 @@ export function PayForm({
           </label>
         ))}
         {info.payAtVenueAllowed && (
-          <label className="flex gap-3 rounded-md border p-3">
+          <label className="flex gap-3 rounded-xl border bg-card p-3">
             <input type="radio" name="method" value="cash" checked={method === 'cash'} onChange={() => setMethod('cash')} />
             <span className="text-sm font-medium">Pay everything at the venue</span>
           </label>

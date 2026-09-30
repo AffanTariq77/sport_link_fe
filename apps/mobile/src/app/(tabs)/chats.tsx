@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { failed, Message, run } from '../../ui';
+import { failed, Message, run, card, colors } from '../../ui';
 
 export default function Chats() {
   const [list, setList] = useState<Schemas['ConversationSummary'][] | null>(null);
@@ -51,7 +51,7 @@ export default function Chats() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 10 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 8, ...card, padding: 12 },
   name: { fontSize: 15, fontWeight: '600' },
-  badge: { backgroundColor: '#171717', color: '#fff', borderRadius: 10, paddingHorizontal: 8, overflow: 'hidden' },
+  badge: { backgroundColor: colors.navy, color: '#fff', borderRadius: 10, paddingHorizontal: 8, overflow: 'hidden' },
 });

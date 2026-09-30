@@ -44,7 +44,7 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
         </p>
       </div>
       {r.mine && typeof sent === 'string' && (
-        <p className="rounded-md border p-3 text-sm">
+        <p className="rounded-xl border bg-card p-3 text-sm">
           {sent === '0' ? (
             <>
               Nobody who matches is nearby right now. Try a wider radius, or <Link href="/matches" className="underline">join an open match</Link>.
@@ -56,7 +56,7 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
       )}
 
       {!r.mine && (
-        <section className="flex flex-col gap-3 rounded-lg border p-4 text-sm">
+        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4 text-sm">
           <p className="font-medium">
             {r.myStatus === 'notified' && r.status !== 'open' ? 'This game has its players now. Thanks for looking.' : (statusText[r.myStatus ?? ''] ?? '')}
           </p>
@@ -83,7 +83,7 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
             {accepted.length > 0 && live && (
               <ActionForm action={pickPlayers.bind(null, r.id)} button="Pick these players">
                 {accepted.map((p) => (
-                  <label key={p.id} className="flex items-center gap-3 rounded-md border p-3 text-sm">
+                  <label key={p.id} className="flex items-center gap-3 rounded-xl border bg-card p-3 text-sm">
                     <input type="checkbox" name="pick" value={p.id} />
                     <span>
                       <Link href={`/players/${p.id}`} className="font-medium underline">
@@ -102,7 +102,7 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
             <section className="flex flex-col gap-2">
               <h2 className="text-lg font-semibold">Picked</h2>
               {picked.map((p) => (
-                <div key={p.id} className="flex items-center justify-between gap-3 rounded-md border p-3 text-sm">
+                <div key={p.id} className="flex items-center justify-between gap-3 rounded-xl border bg-card p-3 text-sm">
                   <span>
                     {p.name} · {p.distance}
                   </span>
@@ -113,7 +113,7 @@ export default async function FindRequestPage(props: PageProps<'/find-players/[i
             </section>
           )}
           {picked.length > 0 && !r.matchId && (
-            <section className="flex flex-col gap-2 rounded-lg border p-4 text-sm">
+            <section className="flex flex-col gap-2 rounded-xl border bg-card p-4 text-sm">
               <h2 className="font-semibold">Make it a match</h2>
               <p>
                 Agree the venue and time in the chat, then <Link href="/matches/new" className="underline">create the match</Link> and add your picked

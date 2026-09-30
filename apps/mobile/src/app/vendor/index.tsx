@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../../ui';
 
 const branchStatusText: Record<string, string> = {
   draft: 'Draft: not visible to players',
@@ -132,7 +132,7 @@ export default function Vendor() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 2 },
+  card: { ...card, padding: 12, gap: 2 },
   name: { fontSize: 16, fontWeight: '600' },
-  note: { borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 10 },
+  note: { ...card, padding: 10 },
 });

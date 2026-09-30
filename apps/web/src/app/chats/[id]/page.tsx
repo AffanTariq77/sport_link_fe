@@ -35,7 +35,7 @@ export default async function ChatPage(props: PageProps<'/chats/[id]'>) {
           <div className="mt-2 flex flex-wrap gap-2">
             {others.map(([userId, name]) => (
               <form key={userId} action={blockPerson.bind(null, userId, `/chats/${id}`)}>
-                <button className="rounded-md border px-3 py-1">Block {name ?? 'player'}</button>
+                <button className="rounded-xl border bg-card px-3 py-1">Block {name ?? 'player'}</button>
               </form>
             ))}
           </div>

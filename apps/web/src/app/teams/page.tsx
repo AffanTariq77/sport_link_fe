@@ -21,7 +21,7 @@ export default async function TeamsPage() {
       <ul className="flex flex-col gap-2">
         {mine?.map((t) => (
           <li key={t.id}>
-            <Link href={`/teams/${t.id}`} className="flex justify-between gap-3 rounded-lg border p-3 text-sm hover:border-neutral-900">
+            <Link href={`/teams/${t.id}`} className="flex justify-between gap-3 rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span>
                 <span className="block font-medium">{t.name}</span>
                 <span className="block">
@@ -34,7 +34,7 @@ export default async function TeamsPage() {
           </li>
         ))}
       </ul>
-      <details className="flex flex-col gap-3 rounded-lg border p-4">
+      <details className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <summary className="cursor-pointer font-semibold">Create a team</summary>
         <ActionForm action={createTeam} button="Create team">
           <label className={labelClass}>

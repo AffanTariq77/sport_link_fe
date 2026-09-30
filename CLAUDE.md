@@ -18,7 +18,7 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 ## API
 
 - The API client is generated from the backend's OpenAPI spec into `packages/api-client` (`openapi-fetch` + `openapi-typescript`). After backend changes, run `API_URL=<api> pnpm --filter @sportslink/api-client generate`. Never hand-write API types or edit `schema.d.ts`.
-- Onboarding is built (sign in, then profile, then ID upload): web in `apps/web/src/app/sign-in`, `onboarding/`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile home route `apps/mobile/src/app/index.tsx`, `src/screens/` and `src/session.ts` (expo-secure-store, expo-image-picker).
+- Onboarding is built (sign in, then profile, then ID upload): web in `apps/web/src/app/sign-in`, `onboarding/`, `actions.ts` and `proxy.ts` (httpOnly cookies, refresh in the proxy); mobile home route `apps/mobile/src/app/(tabs)/index.tsx` (tab screens live in `(tabs)/`), `src/screens/` and `src/session.ts` (expo-secure-store, expo-image-picker).
 - Venues and booking are built: web `apps/web/src/app/venues` and `bookings`, mobile Expo Router routes `src/app/venues` and `src/app/bookings.tsx`. Players browse venues, see the refund policy, pick a court, day and slot, hold it, and pay the advance (web `bookings/[id]/pay`, mobile `src/app/pay/[id].tsx`). Vendors confirm or reject payments (web `vendor/payments`, mobile `src/app/vendor/payments.tsx`), shown when `GET /vendor/access` returns a vendor.
 - Vendor onboarding: web `vendor/` (apply, venues, payment accounts) and `vendor/branches/[id]` (details, policy, courts, hours, prices, checklist, send for review) using `components/action-form.tsx`; mobile `src/app/vendor/index.tsx` (apply and setup status; editing is on the web for now). `toMinor`/`fromMinor` convert typed rupees for the API.
 - Vendor calendar and staff: web `vendor/calendar` (day view per court, walk-ins, blocks, no-shows) and a staff section on `vendor/`; mobile `src/app/vendor/calendar.tsx` (day view, walk-ins and blocks).
@@ -47,8 +47,12 @@ Next.js 16 and Expo 57 are newer than most training data. `apps/web/AGENTS.md`, 
 
 ## Design
 
-The SportsLink brand (logo, colours, fonts) is not set yet. Screens use placeholder styling in `globals.css`.
-Do not invent a brand. When it is ready, put the tokens in one place per app and use them everywhere.
+Theme: navy `#0b1b3f` and orange `#ff6b1a` (chosen 2026-09-30; logo and fonts not set yet, system fonts until then).
+Tokens live in one place per app: `apps/web/src/app/globals.css` (Tailwind `bg-card`, `bg-navy`, `bg-accent`, `text-on-accent`,
+`text-accent-text`, `text-muted`) and `colors`/`card` in `apps/mobile/src/ui.tsx`. Orange fills carry navy text, because
+white on orange fails contrast; orange text uses the darker `accent-text`. Icons: `lucide-react` on web,
+`@expo/vector-icons` (Ionicons) on mobile. Navigation: bottom tab bar (Home, Book, Matches, Find, Chats) on mobile and on
+phone-width web (`components/nav-links.tsx`), navy top bar with all links on desktop. The admin panel keeps its plain theme.
 
 ## Engineering rules
 

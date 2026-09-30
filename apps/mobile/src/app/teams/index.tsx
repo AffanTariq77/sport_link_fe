@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
 import { roleName } from '../../teamText';
-import { Button, failed, Field, Message, run, styles as ui } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, card } from '../../ui';
 
 export default function Teams() {
   const [teams, setTeams] = useState<Schemas['MyTeam'][] | null>(null);
@@ -89,6 +89,6 @@ export default function Teams() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 10 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 10, marginTop: 12 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 8, ...card, padding: 12 },
+  box: { ...card, padding: 12, gap: 10, marginTop: 12 },
 });

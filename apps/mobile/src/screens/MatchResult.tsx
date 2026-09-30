@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card, colors } from '../ui';
 
 export const tagName = (t: string) => t.charAt(0).toUpperCase() + t.slice(1).replaceAll('_', ' ');
 type Outcome = 'a' | 'b' | 'draw';
@@ -189,7 +189,7 @@ export function MatchResult({ id, tz, me }: { id: string; tz: string; me: string
 }
 
 const styles = StyleSheet.create({
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 8 },
+  box: { ...card, padding: 12, gap: 8 },
   line: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  review: { borderTopWidth: 1, borderColor: '#eee', paddingTop: 6, gap: 6 },
+  review: { borderTopWidth: 1, borderColor: colors.line, paddingTop: 6, gap: 6 },
 });

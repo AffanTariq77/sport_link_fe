@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { appLink } from '../push';
 import { api, authHeaders } from '../session';
-import { failed, Message, run } from '../ui';
+import { failed, Message, run, card, colors } from '../ui';
 
 type Item = Schemas['NotificationList']['items'][number];
 const when = (d: string) =>
@@ -63,9 +63,9 @@ export default function Notifications() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 10 },
-  card: { gap: 4, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 },
-  unread: { borderColor: '#171717' },
+  card: { gap: 4, ...card, padding: 12 },
+  unread: { borderColor: colors.navy },
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: 8 },
   name: { fontSize: 15, fontWeight: '600', flexShrink: 1 },
-  time: { fontSize: 12, color: '#666' },
+  time: { fontSize: 12, color: colors.muted },
 });

@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, card, colors } from '../../ui';
 
 type Method = Schemas['PaymentSubmission']['method'];
 
@@ -119,7 +119,7 @@ export default function Pay() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  note: { borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 10 },
-  option: { borderWidth: 1, borderColor: '#999', borderRadius: 6, padding: 12, gap: 2 },
-  optionOn: { borderColor: '#171717', borderWidth: 2 },
+  note: { ...card, padding: 10 },
+  option: { borderWidth: 1, borderColor: colors.muted, borderRadius: 6, padding: 12, gap: 2 },
+  optionOn: { borderColor: colors.navy, borderWidth: 2 },
 });

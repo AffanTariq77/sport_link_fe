@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 export const metadata: Metadata = { title: 'Venues · SportsLink' };
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
+const on = 'border-accent bg-accent hover:opacity-90 text-on-accent';
 
 export default async function VenuesPage(props: PageProps<'/venues'>) {
   const { sport } = await props.searchParams;
@@ -34,7 +34,7 @@ export default async function VenuesPage(props: PageProps<'/venues'>) {
       <ul className="flex flex-col gap-3">
         {venues?.map((v) => (
           <li key={v.id}>
-            <Link href={`/venues/${v.id}`} className="flex gap-4 rounded-lg border p-4 hover:border-neutral-900">
+            <Link href={`/venues/${v.id}`} className="flex gap-4 rounded-xl border bg-card p-4 hover:border-accent">
               {v.photos[0] && (
                 // eslint-disable-next-line @next/next/no-img-element -- served by our own route
                 <img src={v.photos[0]} alt="" className="h-20 w-28 shrink-0 rounded-md object-cover" />

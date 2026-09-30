@@ -35,7 +35,7 @@ export default async function WeeklyPage(props: PageProps<'/bookings/weekly'>) {
           </p>
           <ActionForm action={holdWeekly.bind(null, courtId, startAt, endAt, data.map((w) => new Date(w.startAt).toISOString()))} button="Hold these weeks">
             {data.map((w) => (
-              <label key={w.startAt} className={`flex items-center gap-3 rounded-md border p-3 text-sm ${w.free ? '' : 'opacity-50'}`}>
+              <label key={w.startAt} className={`flex items-center gap-3 rounded-xl border bg-card p-3 text-sm ${w.free ? '' : 'opacity-50'}`}>
                 <input type="checkbox" name="week" value={new Date(w.startAt).toISOString()} defaultChecked={w.free} disabled={!w.free} />
                 {formatDay(w.startAt, tz)}, {formatTime(w.startAt, tz)} to {formatTime(w.endAt, tz)}
                 {!w.free && ' · already booked'}

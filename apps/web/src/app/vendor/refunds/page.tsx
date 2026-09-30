@@ -27,10 +27,10 @@ export default async function RefundsPage(props: PageProps<'/vendor/refunds'>) {
       </Link>
       <h1 className="text-2xl font-semibold">Refunds to send</h1>
       <p className="text-sm">Send each refund back the way the player paid, then enter the transfer reference.</p>
-      {saved && <p className="rounded-md border p-3 text-sm">Marked as sent. The player will confirm when it arrives.</p>}
+      {saved && <p className="rounded-xl border bg-card p-3 text-sm">Marked as sent. The player will confirm when it arrives.</p>}
       {data?.length === 0 && <p>No refunds to send.</p>}
       {data?.map((r) => (
-        <section key={r.id} className="flex flex-col gap-2 rounded-lg border p-4 text-sm">
+        <section key={r.id} className="flex flex-col gap-2 rounded-xl border bg-card p-4 text-sm">
           <p className="text-base font-semibold">
             {formatMoney(r.amount, r.currency)} to {r.playerName ?? 'the player'}
             {r.paidMethod && ` by ${paymentMethodName[r.paidMethod]}`}

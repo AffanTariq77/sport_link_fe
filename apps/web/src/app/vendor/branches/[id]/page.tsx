@@ -18,7 +18,7 @@ const DAY_TYPES = [
   ['all', 'Every day'],
 ] as const;
 const PRICE_ROWS = 6;
-const card = 'flex flex-col gap-3 rounded-lg border p-4';
+const card = 'flex flex-col gap-3 rounded-xl border bg-card p-4';
 const saved: Record<string, string> = {
   details: 'Venue details saved.',
   policy: 'Policy saved. It applies to new bookings.',
@@ -89,7 +89,7 @@ export default async function BranchPage(props: PageProps<'/vendor/branches/[id]
       </Link>
       <h1 className="text-2xl font-semibold">{branch.name}</h1>
       {typeof savedKey === 'string' && saved[savedKey] && (
-        <p className="rounded-md border p-3 text-sm">{saved[savedKey]}</p>
+        <p className="rounded-xl border bg-card p-3 text-sm">{saved[savedKey]}</p>
       )}
 
       {branch.status === 'draft' && (
@@ -121,7 +121,7 @@ export default async function BranchPage(props: PageProps<'/vendor/branches/[id]
             {branch.photos.map((url, i) => (
               <li key={url} className="flex flex-col gap-1">
                 {/* eslint-disable-next-line @next/next/no-img-element -- served by our own route, already sized */}
-                <img src={url} alt={`${branch.name} photo ${i + 1}`} className="aspect-video w-full rounded-md border object-cover" />
+                <img src={url} alt={`${branch.name} photo ${i + 1}`} className="aspect-video w-full rounded-xl border bg-card object-cover" />
                 <ActionForm action={removeVenuePhoto.bind(null, branch.id, url.split('/').pop()!)} button="Remove" />
               </li>
             ))}

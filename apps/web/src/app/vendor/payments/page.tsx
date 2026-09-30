@@ -31,7 +31,7 @@ export default async function VendorPaymentsPage() {
         {queue?.map((q) => {
           const tz = q.branch.timezone;
           return (
-            <li key={q.id} className="rounded-lg border p-4 text-sm">
+            <li key={q.id} className="rounded-xl border bg-card p-4 text-sm">
               <p className="font-semibold">
                 {formatMoney(q.series?.advanceTotal ?? q.advanceAmount, q.booking.currency)} by {paymentMethodName[q.method ?? ''] ?? q.method}
               </p>

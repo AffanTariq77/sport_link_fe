@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { respondToResult, reviewPlayer, submitResult } from '../actions';
 
 export const tagName = (t: string) => t.charAt(0).toUpperCase() + t.slice(1).replaceAll('_', ' ');
-const card = 'flex flex-col gap-3 rounded-lg border p-4 text-sm';
+const card = 'flex flex-col gap-3 rounded-xl border bg-card p-4 text-sm';
 
 /** Result, confirmation and behaviour reviews once the match has been played (spec 11). */
 export function ResultSection({ matchId, state, me, tz }: { matchId: string; state: Schemas['MatchResultState']; me: string; tz: string }) {
@@ -104,7 +104,7 @@ export function ResultSection({ matchId, state, me, tz }: { matchId: string; sta
                 · reviewed
               </p>
             ) : (
-              <details key={p.id} className="rounded-md border p-3">
+              <details key={p.id} className="rounded-xl border bg-card p-3">
                 <summary className="cursor-pointer">{p.name}</summary>
                 <ActionForm action={reviewPlayer.bind(null, matchId, p.id)} button="Send review">
                   <label className={labelClass}>

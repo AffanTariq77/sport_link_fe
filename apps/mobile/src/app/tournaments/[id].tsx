@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
 import { entryText, formatName } from '../../tournamentText';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../../ui';
 
 const tz = 'Asia/Karachi';
 type Method = 'jazzcash' | 'easypaisa' | 'bank_transfer';
@@ -132,5 +132,5 @@ export default function TournamentScreen() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 10 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 },
+  box: { ...card, padding: 12, gap: 6 },
 });

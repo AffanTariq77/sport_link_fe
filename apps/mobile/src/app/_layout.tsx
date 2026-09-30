@@ -1,25 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { colors } from '../ui';
+import { colors, header } from '../ui';
 
 export default function Layout() {
   return (
     <>
-      <Stack screenOptions={{ contentStyle: { backgroundColor: '#fff' }, headerTintColor: colors.accent, headerTitleStyle: { color: colors.text, fontWeight: '600' }, headerShadowVisible: false }}>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="venues/index" options={{ title: 'Book a venue' }} />
+      <Stack screenOptions={{ ...header, contentStyle: { backgroundColor: colors.surface } }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="venues/[id]" options={{ title: '' }} />
         <Stack.Screen name="bookings" options={{ title: 'My bookings' }} />
-        <Stack.Screen name="matches/index" options={{ title: 'Matches' }} />
         <Stack.Screen name="matches/new" options={{ title: 'Create a match' }} />
         <Stack.Screen name="matches/[id]" options={{ title: 'Match' }} />
-        <Stack.Screen name="chats/index" options={{ title: 'Chats' }} />
         <Stack.Screen name="chats/[id]" options={{ title: 'Chat' }} />
         <Stack.Screen name="pay/[id]" options={{ title: 'Pay the advance' }} />
         <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
         <Stack.Screen name="account" options={{ title: 'Your account' }} />
         <Stack.Screen name="leaderboards" options={{ title: 'Rankings' }} />
-        <Stack.Screen name="find-players/index" options={{ title: 'Find Players' }} />
         <Stack.Screen name="find-players/[id]" options={{ title: 'Find Players' }} />
         <Stack.Screen name="tournaments/index" options={{ title: 'Tournaments' }} />
         <Stack.Screen name="tournaments/[id]" options={{ title: 'Tournament' }} />
@@ -31,7 +27,7 @@ export default function Layout() {
         <Stack.Screen name="vendor/calendar" options={{ title: 'Calendar' }} />
         <Stack.Screen name="vendor/refunds" options={{ title: 'Refunds to send' }} />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </>
   );
 }

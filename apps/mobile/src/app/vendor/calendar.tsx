@@ -3,7 +3,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card, colors } from '../../ui';
 
 type Branch = Schemas['VendorAccess']['vendors'][number]['branches'][number];
 type Slot = { courtId: string; startAt: string; endAt: string };
@@ -135,6 +135,6 @@ export default function VendorCalendar() {
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
   court: { fontSize: 18, fontWeight: '600', marginTop: 8 },
-  slot: { borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 10 },
-  taken: { borderColor: '#171717' },
+  slot: { ...card, padding: 10 },
+  taken: { borderColor: colors.navy },
 });

@@ -2,7 +2,7 @@ import { formatDay, formatMoney, formatTime, paymentMethodName, type Schemas } f
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, TextButton, card } from '../../ui';
 
 type Item = Schemas['PaymentToCheck'];
 
@@ -84,6 +84,6 @@ export default function VendorPayments() {
 
 const styles = StyleSheet.create({
   list: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 16, gap: 2 },
+  card: { ...card, padding: 16, gap: 2 },
   name: { fontSize: 16, fontWeight: '600' },
 });

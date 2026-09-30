@@ -3,7 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders, currentUser } from '../../session';
-import { Button, failed, Field, Message, run, styles as ui, TextButton } from '../../ui';
+import { Button, failed, Field, Message, run, styles as ui, TextButton, card } from '../../ui';
 import { roleName } from '../../teamText';
 
 const resultText = { won: 'Won', lost: 'Lost', draw: 'Draw' } as const;
@@ -161,5 +161,5 @@ export default function TeamScreen() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 10 },
-  box: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 },
+  box: { ...card, padding: 12, gap: 6 },
 });

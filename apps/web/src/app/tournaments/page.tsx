@@ -21,7 +21,7 @@ export default async function TournamentsPage() {
       <ul className="flex flex-col gap-2">
         {data?.map((t) => (
           <li key={t.id}>
-            <Link href={`/tournaments/${t.id}`} className="block rounded-lg border p-3 text-sm hover:border-neutral-900">
+            <Link href={`/tournaments/${t.id}`} className="block rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span className="block font-medium">{t.name}</span>
               <span className="block">
                 {t.sport} · {formatName[t.format]} · {t.teamEntry ? 'teams' : 'players'} · {t.entryFee ? formatMoney(t.entryFee, t.currency) : 'free'}
@@ -34,7 +34,7 @@ export default async function TournamentsPage() {
         ))}
       </ul>
       {programmes?.map((p) => (
-        <section key={p.key} className="rounded-lg border border-dashed p-4 text-sm">
+        <section key={p.key} className="rounded-xl border bg-card border-dashed p-4 text-sm">
           <h2 className="font-semibold">{p.name}</h2>
           <p>{p.status === 'coming_soon' ? 'Coming soon.' : 'Open now.'}</p>
         </section>

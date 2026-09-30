@@ -27,16 +27,16 @@ export default async function NotificationsPage() {
             <>
               <span className="flex justify-between gap-3">
                 <span className="font-medium">{n.title}</span>
-                <span className="shrink-0 text-xs text-neutral-500">{when(n.createdAt)}</span>
+                <span className="shrink-0 text-xs text-muted">{when(n.createdAt)}</span>
               </span>
               <span className="block">{n.body}</span>
             </>
           );
-          const cls = `block rounded-lg border p-3 text-sm ${n.readAt ? '' : 'border-neutral-900 dark:border-white'}`;
+          const cls = `block rounded-xl border bg-card p-3 text-sm ${n.readAt ? '' : 'border-accent'}`;
           return (
             <li key={n.id}>
               {n.link ? (
-                <Link href={n.link} className={`${cls} hover:bg-neutral-50 dark:hover:bg-accent hover:opacity-90`}>
+                <Link href={n.link} className={`${cls} hover:bg-surface`}>
                   {body}
                 </Link>
               ) : (

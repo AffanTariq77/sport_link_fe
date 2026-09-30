@@ -18,7 +18,7 @@ function calendarDays(timeZone: string) {
   return [yesterday, ...nextDates(timeZone, 7)];
 }
 const hasStarted = (iso: string) => new Date(iso).getTime() <= Date.now();
-const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
+const on = 'border-accent bg-accent hover:opacity-90 text-on-accent';
 
 export default async function CalendarPage(props: PageProps<'/vendor/calendar'>) {
   if (!(await currentUser())) redirect('/sign-in');
@@ -70,7 +70,7 @@ export default async function CalendarPage(props: PageProps<'/vendor/calendar'>)
               const time = `${formatTime(s.startAt, tz)} to ${formatTime(s.endAt, tz)}`;
               if (booking) {
                 return (
-                  <li key={s.startAt} className="rounded-md border border-neutral-900 p-3 text-sm">
+                  <li key={s.startAt} className="rounded-xl border bg-card border-navy p-3 text-sm">
                     <p className="font-medium">
                       {time} · {sourceText[booking.source]} · {booking.name ?? 'Player'}
                     </p>
@@ -96,7 +96,7 @@ export default async function CalendarPage(props: PageProps<'/vendor/calendar'>)
               }
               const past = hasStarted(s.startAt);
               return (
-                <li key={s.startAt} className="rounded-md border p-3 text-sm">
+                <li key={s.startAt} className="rounded-xl border bg-card p-3 text-sm">
                   <p>{time} · free</p>
                   {!past && (
                     <details className="mt-1">

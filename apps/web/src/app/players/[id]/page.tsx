@@ -27,7 +27,7 @@ export default async function PlayerPage(props: PageProps<'/players/[id]'>) {
         {p.ratings.length === 0 && <p className="text-sm">No rated matches yet.</p>}
         <ul className="flex flex-col gap-2">
           {p.ratings.map((r) => (
-            <li key={r.slug} className="flex justify-between rounded-md border p-3 text-sm">
+            <li key={r.slug} className="flex justify-between rounded-xl border bg-card p-3 text-sm">
               <span className="font-medium">{r.sport}</span>
               <span>
                 {r.rating} · {r.provisional ? 'Provisional' : r.tier} · {r.games} {r.games === 1 ? 'game' : 'games'}

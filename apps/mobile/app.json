@@ -40,7 +40,8 @@
           "cameraPermission": "SportsLink uses your camera to photograph your ID for verification."
         }
       ],
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
   }
 }

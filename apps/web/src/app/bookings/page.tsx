@@ -30,9 +30,9 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 p-6">
       <h1 className="text-2xl font-semibold">My bookings</h1>
-      {typeof error === 'string' && <p className="rounded-md border p-3 text-sm">{error}</p>}
+      {typeof error === 'string' && <p className="rounded-xl border bg-card p-3 text-sm">{error}</p>}
       {cancelled && (
-        <p className="rounded-md border p-3 text-sm">
+        <p className="rounded-xl border bg-card p-3 text-sm">
           Booking cancelled.{' '}
           {cancelled === 'refund' ? 'The venue will send your refund; confirm here when it arrives.' : 'No refund is due under the venue policy.'}
         </p>
@@ -47,7 +47,7 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
       )}
       <ul className="flex flex-col gap-3">
         {bookings?.map((b) => (
-          <li key={b.id} className={`rounded-lg border p-4 ${b.id === held ? 'border-neutral-900' : ''}`}>
+          <li key={b.id} className={`rounded-xl border bg-card p-4 ${b.id === held ? 'border-accent' : ''}`}>
             <p className="font-semibold">
               {b.venue.name} · {b.court.name}
             </p>
@@ -81,7 +81,7 @@ export default async function BookingsPage(props: PageProps<'/bookings'>) {
             {myRefunds
               ?.filter((r) => r.bookingId === b.id)
               .map((r) => (
-                <div key={r.id} className="mt-2 rounded-md border p-2 text-sm">
+                <div key={r.id} className="mt-2 rounded-xl border bg-card p-2 text-sm">
                   <p>
                     Refund {formatMoney(r.amount, r.currency)}: {refundText[r.status] ?? r.status}
                     {r.vendorReference && ` · reference ${r.vendorReference}`}

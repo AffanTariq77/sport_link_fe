@@ -8,7 +8,7 @@ import { authHeaders, currentUser } from '@/lib/session';
 export const metadata: Metadata = { title: 'Matches · SportsLink' };
 
 const chip = 'rounded-full border px-3 py-1 text-sm';
-const on = 'border-neutral-900 bg-accent hover:opacity-90 text-white dark:border-white';
+const on = 'border-accent bg-accent hover:opacity-90 text-on-accent';
 type Match = NonNullable<Awaited<ReturnType<typeof load>>['open']>[number];
 
 async function load(sport?: string) {
@@ -23,7 +23,7 @@ async function load(sport?: string) {
 
 function MatchCard({ m }: { m: Match }) {
   return (
-    <Link href={`/matches/${m.id}`} className="block rounded-lg border p-4 text-sm hover:border-neutral-900">
+    <Link href={`/matches/${m.id}`} className="block rounded-xl border bg-card p-4 text-sm hover:border-accent">
       <p className="text-base font-semibold">
         {m.sport} · {formatDay(m.startAt, m.timezone)}, {formatTime(m.startAt, m.timezone)}
       </p>
@@ -52,7 +52,7 @@ export default async function MatchesPage(props: PageProps<'/matches'>) {
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Matches</h1>
-        <Link href="/matches/new" className="rounded-md bg-accent hover:opacity-90 px-4 py-2 text-sm font-medium text-white">
+        <Link href="/matches/new" className="rounded-md bg-accent hover:opacity-90 px-4 py-2 text-sm font-medium text-on-accent">
           Create a match
         </Link>
       </div>

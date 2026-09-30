@@ -16,14 +16,14 @@ export default async function AccountPage(props: PageProps<'/account'>) {
   if (!user) redirect('/sign-in');
   const q = await props.searchParams;
   const pending = typeof q.phone === 'string' ? q.phone : null;
-  const card = 'flex flex-col gap-3 rounded-lg border p-4';
+  const card = 'flex flex-col gap-3 rounded-xl border bg-card p-4';
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 p-6">
       <Link href="/" className="text-sm underline">
         Home
       </Link>
       <h1 className="text-2xl font-semibold">Your account</h1>
-      {typeof q.done === 'string' && doneText[q.done] && <p className="rounded-md border p-3 text-sm">{doneText[q.done]}</p>}
+      {typeof q.done === 'string' && doneText[q.done] && <p className="rounded-xl border bg-card p-3 text-sm">{doneText[q.done]}</p>}
       <p className="text-sm">
         <Link href={`/players/${user.id}`} className="underline">
           See your public profile

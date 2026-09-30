@@ -3,7 +3,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { api, authHeaders } from '../../session';
-import { Button, failed, Field, Message, run } from '../../ui';
+import { Button, failed, Field, Message, run, card } from '../../ui';
 
 export default function VendorRefunds() {
   const [list, setList] = useState<Schemas['VendorRefund'][]>([]);
@@ -65,6 +65,6 @@ export default function VendorRefunds() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 12 },
-  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, gap: 6 },
+  card: { ...card, padding: 12, gap: 6 },
   name: { fontSize: 16, fontWeight: '600' },
 });

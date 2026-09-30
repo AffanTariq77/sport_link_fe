@@ -36,17 +36,17 @@ export default async function VendorAnalytics(props: PageProps<'/vendor/analytic
   }
   const money = (n: number) => formatMoney(n, a.currency);
   const peak = Math.max(1, ...a.occupancy.heatmap.flat());
-  const card = 'rounded-lg border p-4';
+  const card = 'rounded-xl border bg-card p-4';
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5 p-6">
       <Link href="/vendor" className="text-sm underline">
         Vendor
       </Link>
       <h1 className="text-2xl font-semibold">Analytics</h1>
-      {q.done === 'reply' && <p className="rounded-md border p-3 text-sm">Reply posted.</p>}
+      {q.done === 'reply' && <p className="rounded-xl border bg-card p-3 text-sm">Reply posted.</p>}
       <nav aria-label="Period" className="flex gap-2 text-sm">
         {[7, 30, 90].map((d) => (
-          <Link key={d} href={`/vendor/analytics?days=${d}`} className={`rounded-full border px-3 py-1 ${d === days ? 'bg-accent hover:opacity-90 text-white' : ''}`}>
+          <Link key={d} href={`/vendor/analytics?days=${d}`} className={`rounded-full border px-3 py-1 ${d === days ? 'bg-accent hover:opacity-90 text-on-accent' : ''}`}>
             Last {d} days
           </Link>
         ))}
@@ -134,7 +134,7 @@ export default async function VendorAnalytics(props: PageProps<'/vendor/analytic
               Occupancy %
               <input name="occupancy" type="number" min={0} max={100} defaultValue={calc.occupancy} className={`${input} w-24`} />
             </label>
-            <button className="rounded-md border px-3 py-2 font-medium">Recalculate</button>
+            <button className="rounded-xl border bg-card px-3 py-2 font-medium">Recalculate</button>
           </form>
         </section>
       )}

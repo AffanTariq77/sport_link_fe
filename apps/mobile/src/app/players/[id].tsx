@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { tagName } from '../../screens/MatchResult';
 import { api, authHeaders } from '../../session';
-import { failed, Message, run, styles as ui } from '../../ui';
+import { failed, Message, run, styles as ui, card } from '../../ui';
 
 export default function Player() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -70,5 +70,5 @@ export default function Player() {
 
 const styles = StyleSheet.create({
   page: { padding: 16, gap: 10 },
-  card: { flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12 },
+  card: { flexDirection: 'row', justifyContent: 'space-between', ...card, padding: 12 },
 });

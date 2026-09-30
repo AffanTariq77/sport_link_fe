@@ -21,14 +21,14 @@ export default async function FamilyPage(props: PageProps<'/family/[id]'>) {
       <h2 className="font-semibold">Upcoming bookings</h2>
       {data.bookings.length === 0 && <p className="text-sm">None.</p>}
       {data.bookings.map((b) => (
-        <p key={b.id} className="rounded-md border p-3 text-sm">
+        <p key={b.id} className="rounded-xl border bg-card p-3 text-sm">
           {b.venue}, {b.court} · {formatDay(b.startAt, b.timezone)} {formatTime(b.startAt, b.timezone)} · {bookingStatusText[b.status] ?? b.status}
         </p>
       ))}
       <h2 className="font-semibold">Matches</h2>
       {data.matches.length === 0 && <p className="text-sm">None.</p>}
       {data.matches.map((m) => (
-        <p key={m.id} className="rounded-md border p-3 text-sm">
+        <p key={m.id} className="rounded-xl border bg-card p-3 text-sm">
           {m.sport} · {formatDay(m.startAt, 'Asia/Karachi')} {formatTime(m.startAt, 'Asia/Karachi')} · {m.role === 'host' ? 'hosting' : m.role}
         </p>
       ))}

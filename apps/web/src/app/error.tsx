@@ -9,7 +9,7 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string 
       <h1 className="text-2xl font-semibold">Something went wrong</h1>
       <p className="text-sm">We could not load this page. Check your connection and try again.</p>
       <div className="flex gap-4 text-sm">
-        <button onClick={reset} className="rounded-md border px-4 py-2 font-medium">
+        <button onClick={reset} className="rounded-xl border bg-card px-4 py-2 font-medium">
           Try again
         </button>
         <Link href="/" className="self-center underline">

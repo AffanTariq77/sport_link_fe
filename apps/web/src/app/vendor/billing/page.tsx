@@ -32,10 +32,10 @@ export default async function BillingPage(props: PageProps<'/vendor/billing'>) {
         Vendor
       </Link>
       <h1 className="text-2xl font-semibold">Billing</h1>
-      {saved && <p className="rounded-md border p-3 text-sm">Proof uploaded. Our finance team will confirm it.</p>}
+      {saved && <p className="rounded-xl border bg-card p-3 text-sm">Proof uploaded. Our finance team will confirm it.</p>}
       {data.map((v) => (
         <div key={v.vendorId} className="flex flex-col gap-4">
-          <section className="rounded-lg border p-4 text-sm">
+          <section className="rounded-xl border bg-card p-4 text-sm">
             <p className="font-semibold">So far in {month(v.running.periodStart)}</p>
             <p className="text-2xl font-semibold">{formatMoney(v.running.amount, v.running.currency)}</p>
             <p>
@@ -45,14 +45,14 @@ export default async function BillingPage(props: PageProps<'/vendor/billing'>) {
             </p>
             <p className="text-xs">You are invoiced on the 1st of each month for the month before.</p>
           </section>
-          <section className="rounded-lg border p-4 text-sm">
+          <section className="rounded-xl border bg-card p-4 text-sm">
             <p className="font-semibold">How to pay SportsLink</p>
             <p className="whitespace-pre-wrap">{v.payTo || 'Our payment details are sent with your invoice.'}</p>
           </section>
           <h2 className="text-lg font-semibold">Invoices</h2>
           {v.invoices.length === 0 && <p className="text-sm">No invoices yet.</p>}
           {v.invoices.map((inv) => (
-            <details key={inv.id} className="rounded-lg border p-4 text-sm" open={inv.status === 'issued' || inv.status === 'overdue'}>
+            <details key={inv.id} className="rounded-xl border bg-card p-4 text-sm" open={inv.status === 'issued' || inv.status === 'overdue'}>
               <summary className="cursor-pointer font-medium">
                 {month(inv.periodStart)} · {formatMoney(inv.amount, inv.currency)} · {statusText[inv.status] ?? inv.status}
                 {inv.dueAt && (inv.status === 'issued' || inv.status === 'overdue') && ` · due ${day(inv.dueAt)}`}

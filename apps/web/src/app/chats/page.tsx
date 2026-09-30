@@ -19,12 +19,12 @@ export default async function ChatsPage() {
       <ul className="flex flex-col gap-2">
         {data?.map((c) => (
           <li key={c.id}>
-            <Link href={`/chats/${c.id}`} className="flex justify-between gap-3 rounded-lg border p-3 text-sm hover:border-neutral-900">
+            <Link href={`/chats/${c.id}`} className="flex justify-between gap-3 rounded-xl border bg-card p-3 text-sm hover:border-accent">
               <span>
                 <span className="block font-medium">{c.title}</span>
                 <span className="block truncate">{c.lastMessage ?? 'No messages yet'}</span>
               </span>
-              {c.unread > 0 && <span className="self-center rounded-full bg-accent hover:opacity-90 px-2 text-xs text-white">{c.unread}</span>}
+              {c.unread > 0 && <span className="self-center rounded-full bg-accent hover:opacity-90 px-2 text-xs text-on-accent">{c.unread}</span>}
             </Link>
           </li>
         ))}

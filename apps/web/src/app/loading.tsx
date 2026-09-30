@@ -4,9 +4,9 @@ export default function Loading() {
       <p role="status" className="text-sm">
         Loading…
       </p>
-      <div className="h-6 w-2/3 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
-      <div className="h-24 w-full animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
-      <div className="h-24 w-full animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+      <div className="h-6 w-2/3 animate-pulse rounded bg-surface" />
+      <div className="h-24 w-full animate-pulse rounded bg-surface" />
+      <div className="h-24 w-full animate-pulse rounded bg-surface" />
     </main>
   );
 }
