@@ -1,0 +1,9 @@
+# Never upload local env files, dependencies or build output to Vercel.
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.next
+**/.turbo
+**/.expo
+docs

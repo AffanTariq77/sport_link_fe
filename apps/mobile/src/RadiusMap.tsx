@@ -1,13 +1,20 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import { api, authHeaders } from './session';
 import { card, colors, failed, run } from './ui';
 
 type Point = { latitude: number; longitude: number };
 const LAHORE: Point = { latitude: 31.5204, longitude: 74.3587 }; // launch city, shown until the player shares a location
+// Google Maps on Android needs an API key in the build (DEVELOPER_INPUT.md); without one the map crashes the app.
+// Expo Go ships its own key, and iOS uses Apple Maps, so only keyless Android builds fall back to the drawn radius.
+const canMap =
+  Platform.OS !== 'android' ||
+  Constants.executionEnvironment === ExecutionEnvironment.StoreClient ||
+  !!Constants.expoConfig?.android?.config?.googleMaps?.apiKey;
 const region = (p: Point, km: number) => ({ ...p, latitudeDelta: (km * 2.6) / 111, longitudeDelta: (km * 2.6) / 111 });
 
 /**
@@ -42,6 +49,14 @@ export function RadiusMap({ radiusKm, searching = false, hasLocation, onShared }
   const centre = here ? { latitude: here.latitude, longitude: here.longitude } : LAHORE;
   return (
     <View style={styles.box}>
+      {!canMap ? (
+        <View style={[styles.map, styles.rings]} accessibilityLabel={`Your search area, ${km} km around you`}>
+          {[1, 0.66, 0.33].map((f) => (
+            <View key={f} style={[styles.ring, { width: 240 * f, height: 240 * f, borderRadius: 120 * f, opacity: here || hasLocation ? 1 : 0.4 }]} />
+          ))}
+          <View style={styles.you} />
+        </View>
+      ) : (
       <MapView style={styles.map} region={region(centre, here ? km : 12)} rotateEnabled={false} pitchEnabled={false} accessibilityLabel={`Map of your search area, ${km} km around you`}>
         {here && (
           <>
@@ -52,6 +67,7 @@ export function RadiusMap({ radiusKm, searching = false, hasLocation, onShared }
           </>
         )}
       </MapView>
+      )}
       <View style={styles.overlay} pointerEvents="box-none">
         <View style={styles.pill}>
           {searching && <ActivityIndicator size="small" color="#fff" />}
@@ -70,6 +86,8 @@ export function RadiusMap({ radiusKm, searching = false, hasLocation, onShared }
 const styles = StyleSheet.create({
   box: { ...card, overflow: 'hidden' },
   map: { width: '100%', height: 280 },
+  rings: { backgroundColor: colors.navySoft, alignItems: 'center', justifyContent: 'center' },
+  ring: { position: 'absolute', borderWidth: 2, borderColor: colors.accent, backgroundColor: 'rgba(255,107,26,0.12)' },
   overlay: { position: 'absolute', top: 10, left: 10, right: 10, flexDirection: 'row', justifyContent: 'space-between' },
   pill: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.navy, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7 },
   locate: { backgroundColor: colors.accent },

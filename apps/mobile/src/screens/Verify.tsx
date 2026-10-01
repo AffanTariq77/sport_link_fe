@@ -78,6 +78,9 @@ export function Verify({
   return (
     <View style={styles.form}>
       <Text style={styles.heading}>Verify your identity</Text>
+      {process.env.EXPO_PUBLIC_DEMO === '1' && (
+        <Text style={[styles.body, { fontWeight: '800' }]}>Demo version: upload a made-up image, never a real ID.</Text>
+      )}
       <Text style={styles.body}>
         Upload your {docLabel} so other players know you are real. It is encrypted, never shown to other players, and
         only our verification team can see it.
