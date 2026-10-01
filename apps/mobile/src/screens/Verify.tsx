@@ -1,5 +1,6 @@
 import type { Schemas } from '@sportslink/api-client';
 import { File } from 'expo-file-system';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Image, Text, View } from 'react-native';
@@ -7,7 +8,19 @@ import { api, authHeaders } from '../session';
 import { Button, failed, Field, Message, type Runner, styles, TextButton } from '../ui';
 
 type Photo = { uri: string };
-const MAX_BYTES = 5_000_000; // Matches the API setting verification.max_image_bytes.
+const MAX_SIDE = 1600; // px: ID text stays sharp
+
+/**
+ * Phone photos are often several MB; both go in one request, and hosting caps request bodies (Vercel: 4.5 MB).
+ * Re-encoding at most 1600 px a side as JPEG keeps each photo to a few hundred KB.
+ */
+async function shrink(asset: ImagePicker.ImagePickerAsset) {
+  const context = ImageManipulator.manipulate(asset.uri);
+  if (Math.max(asset.width, asset.height) > MAX_SIDE)
+    context.resize(asset.width >= asset.height ? { width: MAX_SIDE, height: null } : { width: null, height: MAX_SIDE });
+  const image = await context.renderAsync();
+  return (await image.saveAsync({ format: SaveFormat.JPEG, compress: 0.8 })).uri;
+}
 
 const pickerOptions: ImagePicker.ImagePickerOptions = {
   mediaTypes: 'images',
@@ -42,8 +55,7 @@ export function Verify({
       : ImagePicker.launchImageLibraryAsync(pickerOptions));
     const asset = result.canceled ? null : result.assets[0];
     if (!asset) return;
-    if (asset.fileSize && asset.fileSize > MAX_BYTES) return setMessage('That photo is too large. Try another one.');
-    set({ uri: asset.uri });
+    set({ uri: await shrink(asset).catch(() => asset.uri) });
   }
 
   const submit = () =>
